@@ -14,6 +14,7 @@ class CarSerializer(serializers.ModelSerializer):
 
 
 class OwnerSerializer(serializers.ModelSerializer):
+  cars = CarSerializer(many=True, read_only=True)
   class Meta:
     model = Owner
     fields = '__all__'
