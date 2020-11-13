@@ -2136,8 +2136,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Table.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Button.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Row.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Row.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -2187,7 +2186,7 @@ var Owners = /*#__PURE__*/function (_Component) {
       owners: [],
       sortedBy: {
         name: 'last_name',
-        direction: 'desc'
+        direction: 'asc'
       }
     }, _this.upArrow = "\u2191", _this.downArrow = "\u2193", _this.getOwners = function () {
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/testforjob/api/owners/', {
@@ -2202,15 +2201,13 @@ var Owners = /*#__PURE__*/function (_Component) {
         return console.log('getOwners', err);
       });
     }, _this.btnSortClick = function (e) {
-      var sorted_name = e.target.id;
-      console.log('btnSortClick e', e);
+      var sorted_name = e.target.id; //console.log('btnSortClick e', e);
 
       if (_this.state.sortedBy.name !== sorted_name) {
         var sortedBy = {
           name: sorted_name,
           direction: 'desc'
-        };
-        console.log('btnSortClick sortedBy', sortedBy);
+        }; //console.log('btnSortClick sortedBy', sortedBy);
 
         _this.setState({
           sortedBy: sortedBy
@@ -2220,9 +2217,8 @@ var Owners = /*#__PURE__*/function (_Component) {
 
         var _sortedBy = _objectSpread(_objectSpread({}, _this.state.sortedBy), {}, {
           direction: direction
-        });
+        }); //console.log('btnSortClick', sortedBy);
 
-        console.log('btnSortClick', _sortedBy);
 
         _this.setState({
           sortedBy: _sortedBy
@@ -2253,61 +2249,53 @@ var Owners = /*#__PURE__*/function (_Component) {
         striped: true,
         bordered: true,
         hover: true
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("th", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__.default, {
-        variant: "outline",
-        className: "col text-left",
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("th", {
         id: "last_name",
-        value: '',
         onClick: this.btnSortClick
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__.default, {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__.default, {
         id: "last_name"
       }, this.state.sortedBy.name === 'last_name' && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-        id: "last_name"
-      }, this.arrow()), ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("strong", {
-        id: "last_name"
-      }, "\u0424\u0430\u043C\u0438\u043B\u0438\u044F")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("th", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__.default, {
-        variant: "outline",
-        className: "col text-left",
+        id: "last_name",
+        className: "ml-2"
+      }, this.arrow()), ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+        id: "last_name",
+        className: "ml-2"
+      }, "\u0424\u0430\u043C\u0438\u043B\u0438\u044F"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("th", {
         id: "name",
-        value: '',
         onClick: this.btnSortClick
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__.default, {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__.default, {
         id: "name"
       }, this.state.sortedBy.name === 'name' && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-        id: "name"
-      }, this.arrow()), ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("strong", {
-        id: "name"
-      }, "\u0418\u043C\u044F")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("th", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__.default, {
-        variant: "outline",
-        className: "col text-left",
-        name: "patronymic",
-        value: 'Отчество',
-        onClick: this.btnSortClick
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("strong", null, "\u041E\u0442\u0447\u0435\u0441\u0442\u0432\u043E"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("th", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__.default, {
-        variant: "outline",
-        className: "col text-left",
+        id: "name",
+        className: "ml-2"
+      }, this.arrow()), ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+        id: "name",
+        className: "ml-2"
+      }, "\u0418\u043C\u044F"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("th", {
+        id: "patronymic"
+      }, "\u041E\u0442\u0447\u0435\u0441\u0442\u0432\u043E"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("th", {
         id: "gender",
-        value: '',
         onClick: this.btnSortClick
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__.default, {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__.default, {
         id: "gender"
       }, this.state.sortedBy.name === 'gender' && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-        id: "gender"
-      }, this.arrow()), ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("strong", {
-        id: "gender"
-      }, "\u041F\u043E\u043B")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("th", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__.default, {
-        variant: "outline",
-        className: "col text-left",
+        id: "gender",
+        className: "ml-2"
+      }, this.arrow()), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+        id: "gender",
+        className: "ml-2"
+      }, "\u041F\u043E\u043B"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("th", {
         id: "age",
-        value: '',
         onClick: this.btnSortClick
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__.default, {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__.default, {
         id: "age"
       }, this.state.sortedBy.name === 'age' && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-        id: "age"
-      }, this.arrow()), ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("strong", {
-        id: "age"
-      }, "\u0412\u043E\u0437\u0440\u0430\u0441\u0442")))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("tbody", null, this.state.owners.map(function (o, index) {
+        id: "age",
+        className: "ml-2"
+      }, this.arrow()), ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+        id: "age",
+        className: "ml-2"
+      }, "\u0412\u043E\u0437\u0440\u0430\u0441\u0442"))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("tbody", null, this.state.owners.map(function (o, index) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("tr", {
           key: index
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("td", null, o.last_name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("td", null, o.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("td", null, o.patronymic), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("td", null, o.gender), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("td", null, o.age));
@@ -4548,79 +4536,6 @@ module.exports = ReactPropTypesSecret;
 
 /***/ }),
 
-/***/ "./node_modules/react-bootstrap/esm/Button.js":
-/*!****************************************************!*\
-  !*** ./node_modules/react-bootstrap/esm/Button.js ***!
-  \****************************************************/
-/*! namespace exports */
-/*! export default [provided] [no usage info] [missing usage info prevents renaming] */
-/*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_require__.n, __webpack_exports__, __webpack_require__.r, __webpack_require__.* */
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "./node_modules/@babel/runtime/helpers/esm/extends.js");
-/* harmony import */ var _babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/esm/objectWithoutPropertiesLoose */ "./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js");
-/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
-/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var _ThemeProvider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ThemeProvider */ "./node_modules/react-bootstrap/esm/ThemeProvider.js");
-/* harmony import */ var _SafeAnchor__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./SafeAnchor */ "./node_modules/react-bootstrap/esm/SafeAnchor.js");
-;
-
-
-
-
-
-var defaultProps = {
-  variant: 'primary',
-  active: false,
-  disabled: false
-};
-var Button = react__WEBPACK_IMPORTED_MODULE_3__.forwardRef(function (_ref, ref) {
-  var bsPrefix = _ref.bsPrefix,
-      variant = _ref.variant,
-      size = _ref.size,
-      active = _ref.active,
-      className = _ref.className,
-      block = _ref.block,
-      type = _ref.type,
-      as = _ref.as,
-      props = (0,_babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_1__.default)(_ref, ["bsPrefix", "variant", "size", "active", "className", "block", "type", "as"]);
-
-  var prefix = (0,_ThemeProvider__WEBPACK_IMPORTED_MODULE_4__.useBootstrapPrefix)(bsPrefix, 'btn');
-  var classes = classnames__WEBPACK_IMPORTED_MODULE_2___default()(className, prefix, active && 'active', variant && prefix + "-" + variant, block && prefix + "-block", size && prefix + "-" + size);
-
-  if (props.href) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(_SafeAnchor__WEBPACK_IMPORTED_MODULE_5__.default, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__.default)({}, props, {
-      as: as,
-      ref: ref,
-      className: classnames__WEBPACK_IMPORTED_MODULE_2___default()(classes, props.disabled && 'disabled')
-    }));
-  }
-
-  if (ref) {
-    props.ref = ref;
-  }
-
-  if (type) {
-    props.type = type;
-  } else if (!as) {
-    props.type = 'button';
-  }
-
-  var Component = as || 'button';
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement(Component, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__.default)({}, props, {
-    className: classes
-  }));
-});
-Button.displayName = 'Button';
-Button.defaultProps = defaultProps;
-/* harmony default export */ __webpack_exports__["default"] = (Button);
-
-/***/ }),
-
 /***/ "./node_modules/react-bootstrap/esm/Row.js":
 /*!*************************************************!*\
   !*** ./node_modules/react-bootstrap/esm/Row.js ***!
@@ -4682,95 +4597,6 @@ var Row = react__WEBPACK_IMPORTED_MODULE_3__.forwardRef(function (_ref, ref) {
 Row.displayName = 'Row';
 Row.defaultProps = defaultProps;
 /* harmony default export */ __webpack_exports__["default"] = (Row);
-
-/***/ }),
-
-/***/ "./node_modules/react-bootstrap/esm/SafeAnchor.js":
-/*!********************************************************!*\
-  !*** ./node_modules/react-bootstrap/esm/SafeAnchor.js ***!
-  \********************************************************/
-/*! namespace exports */
-/*! export default [provided] [no usage info] [missing usage info prevents renaming] */
-/*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_exports__, __webpack_require__.r, __webpack_require__.* */
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "./node_modules/@babel/runtime/helpers/esm/extends.js");
-/* harmony import */ var _babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/esm/objectWithoutPropertiesLoose */ "./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var _createChainedFunction__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./createChainedFunction */ "./node_modules/react-bootstrap/esm/createChainedFunction.js");
-;
-
-
-
-
-function isTrivialHref(href) {
-  return !href || href.trim() === '#';
-}
-/**
- * There are situations due to browser quirks or Bootstrap CSS where
- * an anchor tag is needed, when semantically a button tag is the
- * better choice. SafeAnchor ensures that when an anchor is used like a
- * button its accessible. It also emulates input `disabled` behavior for
- * links, which is usually desirable for Buttons, NavItems, DropdownItems, etc.
- */
-
-
-var SafeAnchor = react__WEBPACK_IMPORTED_MODULE_2__.forwardRef(function (_ref, ref) {
-  var _ref$as = _ref.as,
-      Component = _ref$as === void 0 ? 'a' : _ref$as,
-      disabled = _ref.disabled,
-      onKeyDown = _ref.onKeyDown,
-      props = (0,_babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_1__.default)(_ref, ["as", "disabled", "onKeyDown"]);
-
-  var handleClick = function handleClick(event) {
-    var href = props.href,
-        onClick = props.onClick;
-
-    if (disabled || isTrivialHref(href)) {
-      event.preventDefault();
-    }
-
-    if (disabled) {
-      event.stopPropagation();
-      return;
-    }
-
-    if (onClick) {
-      onClick(event);
-    }
-  };
-
-  var handleKeyDown = function handleKeyDown(event) {
-    if (event.key === ' ') {
-      event.preventDefault();
-      handleClick(event);
-    }
-  };
-
-  if (isTrivialHref(props.href)) {
-    props.role = props.role || 'button'; // we want to make sure there is a href attribute on the node
-    // otherwise, the cursor incorrectly styled (except with role='button')
-
-    props.href = props.href || '#';
-  }
-
-  if (disabled) {
-    props.tabIndex = -1;
-    props['aria-disabled'] = true;
-  }
-
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_2__.createElement(Component, (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__.default)({
-    ref: ref
-  }, props, {
-    onClick: handleClick,
-    onKeyDown: (0,_createChainedFunction__WEBPACK_IMPORTED_MODULE_3__.default)(handleKeyDown, onKeyDown)
-  }));
-});
-SafeAnchor.displayName = 'SafeAnchor';
-/* harmony default export */ __webpack_exports__["default"] = (SafeAnchor);
 
 /***/ }),
 
@@ -4903,57 +4729,6 @@ function createBootstrapComponent(Component, opts) {
 
 
 /* harmony default export */ __webpack_exports__["default"] = (ThemeProvider);
-
-/***/ }),
-
-/***/ "./node_modules/react-bootstrap/esm/createChainedFunction.js":
-/*!*******************************************************************!*\
-  !*** ./node_modules/react-bootstrap/esm/createChainedFunction.js ***!
-  \*******************************************************************/
-/*! namespace exports */
-/*! export default [provided] [no usage info] [missing usage info prevents renaming] */
-/*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_exports__, __webpack_require__.r, __webpack_require__.* */
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/**
- * Safe chained function
- *
- * Will only create a new function if needed,
- * otherwise will pass back existing functions or null.
- *
- * @param {function} functions to chain
- * @returns {function|null}
- */
-function createChainedFunction() {
-  for (var _len = arguments.length, funcs = new Array(_len), _key = 0; _key < _len; _key++) {
-    funcs[_key] = arguments[_key];
-  }
-
-  return funcs.filter(function (f) {
-    return f != null;
-  }).reduce(function (acc, f) {
-    if (typeof f !== 'function') {
-      throw new Error('Invalid Argument Type, must only provide functions, undefined, or null.');
-    }
-
-    if (acc === null) return f;
-    return function chainedFunction() {
-      for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-        args[_key2] = arguments[_key2];
-      }
-
-      // @ts-ignore
-      acc.apply(this, args); // @ts-ignore
-
-      f.apply(this, args);
-    };
-  }, null);
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (createChainedFunction);
 
 /***/ }),
 

@@ -7,7 +7,7 @@ export class Owners extends Component {
     owners: [],
     sortedBy: {
       name: 'last_name',
-      direction: 'desc',
+      direction: 'asc',
     },
   };
 
@@ -41,14 +41,14 @@ export class Owners extends Component {
 
   btnSortClick = (e) => {
     const sorted_name = e.target.id;
-    console.log('btnSortClick e', e);
+    //console.log('btnSortClick e', e);
 
     if (this.state.sortedBy.name !== sorted_name) {
       const sortedBy = {
         name: sorted_name,
         direction: 'desc',
       };
-      console.log('btnSortClick sortedBy', sortedBy);
+      //console.log('btnSortClick sortedBy', sortedBy);
       this.setState({
         sortedBy: sortedBy,
       });
@@ -60,7 +60,7 @@ export class Owners extends Component {
         ...this.state.sortedBy,
         direction: direction,
       };
-      console.log('btnSortClick', sortedBy);
+      //console.log('btnSortClick', sortedBy);
 
       this.setState({ sortedBy: sortedBy });
     }
@@ -78,74 +78,54 @@ export class Owners extends Component {
         <Table striped bordered hover>
           <thead>
             <tr>
-              <th>
-                <Button
-                  variant="outline"
-                  className="col text-left"
-                  id="last_name"
-                  value={''}
-                  onClick={this.btnSortClick}
-                >
-                  <Row id="last_name">
-                    {this.state.sortedBy.name === 'last_name' && (
-                      <div id="last_name">{this.arrow()}</div>
-                    )}{' '}
-                    <strong id="last_name">Фамилия</strong>
-                  </Row>
-                </Button>
+              <th id="last_name" onClick={this.btnSortClick}>
+                <Row id="last_name">
+                  {this.state.sortedBy.name === 'last_name' && (
+                    <div id="last_name" className="ml-2">
+                      {this.arrow()}
+                    </div>
+                  )}{' '}
+                  <div id="last_name" className="ml-2">
+                    Фамилия
+                  </div>
+                </Row>
               </th>
-              <th>
-                <Button
-                  variant="outline"
-                  className="col text-left"
-                  id="name"
-                  value={''}
-                  onClick={this.btnSortClick}
-                >
-                  <Row id="name">
-                    {this.state.sortedBy.name === 'name' && <div id="name">{this.arrow()}</div>}{' '}
-                    <strong id="name">Имя</strong>
-                  </Row>
-                </Button>
+              <th id="name" onClick={this.btnSortClick}>
+                <Row id="name">
+                  {this.state.sortedBy.name === 'name' && (
+                    <div id="name" className="ml-2">
+                      {this.arrow()}
+                    </div>
+                  )}{' '}
+                  <div id="name" className="ml-2">
+                    Имя
+                  </div>
+                </Row>
               </th>
-              <th>
-                <Button
-                  variant="outline"
-                  className="col text-left"
-                  name="patronymic"
-                  value={'Отчество'}
-                  onClick={this.btnSortClick}
-                >
-                  <strong>Отчество</strong>
-                </Button>
+              <th id="patronymic">Отчество</th>
+              <th id="gender" onClick={this.btnSortClick}>
+                <Row id="gender">
+                  {this.state.sortedBy.name === 'gender' && (
+                    <div id="gender" className="ml-2">
+                      {this.arrow()}
+                    </div>
+                  )}
+                  <div id="gender" className="ml-2">
+                    Пол
+                  </div>
+                </Row>
               </th>
-              <th>
-                <Button
-                  variant="outline"
-                  className="col text-left"
-                  id="gender"
-                  value={''}
-                  onClick={this.btnSortClick}
-                >
-                  <Row id="gender">
-                    {this.state.sortedBy.name === 'gender' && <div id="gender">{this.arrow()}</div>}{' '}
-                    <strong id="gender">Пол</strong>
-                  </Row>
-                </Button>
-              </th>
-              <th>
-                <Button
-                  variant="outline"
-                  className="col text-left"
-                  id="age"
-                  value={''}
-                  onClick={this.btnSortClick}
-                >
-                  <Row id="age">
-                    {this.state.sortedBy.name === 'age' && <div id="age">{this.arrow()}</div>}{' '}
-                    <strong id="age">Возраст</strong>
-                  </Row>
-                </Button>
+              <th id="age" onClick={this.btnSortClick}>
+                <Row id="age">
+                  {this.state.sortedBy.name === 'age' && (
+                    <div id="age" className="ml-2">
+                      {this.arrow()}
+                    </div>
+                  )}{' '}
+                  <div id="age" className="ml-2">
+                    Возраст
+                  </div>
+                </Row>
               </th>
             </tr>
           </thead>
