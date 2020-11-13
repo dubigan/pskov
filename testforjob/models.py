@@ -8,19 +8,20 @@ class Manufacturer(Model):
 
 
 class Car(Model):
-  model = CharField(max_length=20)
-  color = CharField(max_length=5)
-  registration = DateTimeField()
+  model = CharField(max_length=50, default='', unique=False, blank=False)
+  color = CharField(max_length=20, default='', unique=False, blank=True)
+  production = DateTimeField()
   power = IntegerField()
   mileage = IntegerField()
   owner = ForeignKey('Owner', on_delete=CASCADE)
   manufacturer = ForeignKey('Manufacturer', on_delete=CASCADE)
-  comment = TextField(max_length=200)
+  comment = TextField(max_length=200, default='', unique=False, blank=True)
 
 
 class Owner(Model):
-  name = CharField(max_length=20)
-  last_name = CharField(max_length=20)
+  name = CharField(max_length=50)
+  patronymic = CharField(max_length=50, default='', unique=False, blank=True)
+  last_name = CharField(max_length=50, default='', unique=False, blank=False)
   age = IntegerField()
   gender = CharField(max_length=1)
   comment = TextField(max_length=200)
