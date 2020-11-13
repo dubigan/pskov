@@ -143,6 +143,9 @@ export class Owners extends Component {
             })}
           </tbody>
         </Table>
+        <Button variant="primary" name="btnAddOwner" className="col">
+          +
+        </Button>
       </div>
     );
   }
