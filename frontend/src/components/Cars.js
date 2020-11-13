@@ -14,14 +14,22 @@ export class Cars extends Component {
   getManufacturers = () => {
     axios
       .post('/testforjob/api/manufacturers/', {})
-      .then((res) => {})
+      .then((res) => {
+        console.log('getManufacturers', res.data);
+
+        this.setState({ manufacturers: res.data });
+      })
       .catch((err) => console.log('getManufacturers', err));
   };
 
   getCars = () => {
     axios
       .post('/testforjob/api/cars/', { owner: this.state.owner })
-      .then((res) => {})
+      .then((res) => {
+        console.log('getCars', res.data);
+
+        this.setState({ cars: res.data });
+      })
       .catch((err) => console.log('getCars', err));
   };
 

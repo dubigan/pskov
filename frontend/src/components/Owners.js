@@ -26,7 +26,7 @@ export class Owners extends Component {
         {this.state.owners.map((o, index) => {
           return (
             <input
-              className="form-control col-6"
+              className="form-control col-2"
               name="name"
               type="text"
               value={o.name}

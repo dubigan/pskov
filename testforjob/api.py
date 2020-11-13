@@ -33,13 +33,17 @@ class CarsListView(APIView):
     return Response()
 
   def post(self, request, format=None):
+    cars = None
     if (owner_id := request.data.get('owner', None)) !=None:
       cars = Car.objects.get(owner = owner_id)
-      carsSer = CarSerializer(cars, many=True)
-      return Response({'cars': carsSer.data})
-    return Response()
+    else:
+      cars = Car.objects.all()
+    carsSer = CarSerializer(cars, many=True)
+    return Response({carsSer.data})
   
 
 @api_view(('POST',))
 def get_manufacturers(request, format=None):
-  return Response()
+  manuf = Manufacturer.objects.all()
+  manufSer = ManufacturerSerializer(manuf, many=True)
+  return Response(manufSer.data)

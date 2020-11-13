@@ -2200,7 +2200,7 @@ var Owners = /*#__PURE__*/function (_Component) {
     value: function render() {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, this.state.owners.map(function (o, index) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
-          className: "form-control col-6",
+          className: "form-control col-2",
           name: "name",
           type: "text",
           value: o.name,
