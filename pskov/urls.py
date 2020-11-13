@@ -32,8 +32,8 @@ urlpatterns += [
      path('testforjob/', include('testforjob.urls')),
 ]
 
-urlpatterns += [
-    path('', RedirectView.as_view(url='/testforjob/', permanent=True)),
-]
+#urlpatterns += [
+#    path('', RedirectView.as_view(url='/testforjob/', permanent=True)),
+#]
 
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+#urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
