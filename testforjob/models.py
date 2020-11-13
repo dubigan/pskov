@@ -22,5 +22,5 @@ class Owner(Model):
   name = CharField(max_length=20)
   last_name = CharField(max_length=20)
   age = IntegerField()
-  gender = CharField(max_length=1, choices=['m','f'])
+  gender = CharField(max_length=1)
   comment = TextField(max_length=200)
