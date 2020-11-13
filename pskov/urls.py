@@ -25,6 +25,10 @@ urlpatterns = [
 ]
 
 urlpatterns += [
+    path('', include('frontend.urls'))
+]
+
+urlpatterns += [
      path('testforjob/', include('testforjob.urls')),
 ]
 
