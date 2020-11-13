@@ -2191,7 +2191,7 @@ var Owners = /*#__PURE__*/function (_Component) {
       }
     }, _this.upArrow = "\u2191", _this.downArrow = "\u2193", _this.getOwners = function () {
       axios__WEBPACK_IMPORTED_MODULE_1___default().post('/testforjob/api/owners/', {
-        sortedBy: _this.state.sortedBy
+        sorted_by: _this.state.sortedBy
       }).then(function (res) {
         console.log('getOwners', res.data);
 

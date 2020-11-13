@@ -31,7 +31,7 @@ export class Owners extends Component {
 
   getOwners = () => {
     axios
-      .post('/testforjob/api/owners/', { sortedBy: this.state.sortedBy })
+      .post('/testforjob/api/owners/', { sorted_by: this.state.sortedBy })
       .then((res) => {
         console.log('getOwners', res.data);
         this.setState({ owners: res.data });

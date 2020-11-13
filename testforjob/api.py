@@ -13,7 +13,10 @@ class OwnersListView(APIView):
 
   def post(self, request, format=None):
     #print('post owners', request)
-    owners = Owner.objects.all()
+    sortedBy = request.data.get('sorted_by', None)
+    print('owners post sortedBy', sortedBy)
+    direction = '-' if sortedBy['direction'] == 'desc' else ''
+    owners = Owner.objects.all().order_by(direction + sortedBy['name'])
     ownersSer = OwnerSerializer(owners, many=True)
     return Response(ownersSer.data)
 
