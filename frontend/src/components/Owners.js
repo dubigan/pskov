@@ -1,15 +1,19 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Table, Button, Row } from 'react-bootstrap';
+import Loader from './Loader';
 
 export class Owners extends Component {
   state = {
+    loading: false,
     owners: [],
     sortedBy: {
       name: 'last_name',
       direction: 'asc',
     },
   };
+
+  url = '/testforjob/api/owners/';
 
   //upArrow = '&#x0225C;';
   upArrow = '\u2191';
@@ -30,13 +34,15 @@ export class Owners extends Component {
   }
 
   getOwners = () => {
+    this.setState({ loading: true });
     axios
-      .post('/testforjob/api/owners/', { sorted_by: this.state.sortedBy })
+      .post(this.url, { sorted_by: this.state.sortedBy })
       .then((res) => {
         console.log('getOwners', res.data);
         this.setState({ owners: res.data });
       })
-      .catch((err) => console.log('getOwners', err));
+      .catch((err) => console.log('getOwners', err.response.data))
+      .finally(() => this.setState({ loading: false }));
   };
 
   btnSortClick = (e) => {
@@ -68,13 +74,49 @@ export class Owners extends Component {
 
   get arrow() {
     //console.log('arrow', this.state.sortedBy.direction);
-
     return this.state.sortedBy.direction === 'asc' ? this.upArrow : this.downArrow;
   }
+
+  btnDelClick = (e) => {
+    this.setState({ loading: true });
+    axios
+      .post(this.url, {
+        sorted_by: this.state.sortedBy,
+        btn_del: '',
+        owner_pk: this.state.owners[+e.target.value].id,
+      })
+      .then((res) => {
+        console.log('delBtnClick', res.data);
+        this.setState({ owners: res.data });
+      })
+      .catch((err) => console.log('delBtnClick', err.response.data))
+      .finally(() => this.setState({ loading: false }));
+  };
+  btnEditClick = (e) => {
+    axios
+      .post(this.url, { btn_edit: '', owner_pk: this.state.owners[+e.target.value].id })
+      .then((res) => {
+        if (res.data.redirect) {
+          window.location.href = res.data['redirect'];
+        }
+      })
+      .catch((err) => console.log('btnEditClick', err.response.data));
+  };
+  btnAddClick = (e) => {
+    axios
+      .post(this.url, { btn_add: '' })
+      .then((res) => {
+        if (res.data.redirect) {
+          window.location.href = res.data['redirect'];
+        }
+      })
+      .catch((err) => console.log('btnAddClick', err.response.data));
+  };
 
   render() {
     return (
       <div>
+        {this.state.loading && <Loader />}
         <Table striped bordered hover>
           <thead>
             <tr>
@@ -127,6 +169,7 @@ export class Owners extends Component {
                   </div>
                 </Row>
               </th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -136,14 +179,34 @@ export class Owners extends Component {
                   <td>{o.last_name}</td>
                   <td>{o.name}</td>
                   <td>{o.patronymic}</td>
-                  <td>{o.gender}</td>
+                  <td>{o.gender === 'f' ? 'Жен' : 'Муж'}</td>
                   <td>{o.age}</td>
+                  <td style={{ width: 100 + 'px' }}>
+                    <Row>
+                      <Button
+                        value={index}
+                        variant="primary"
+                        className="ml-2"
+                        onClick={this.btnEditClick}
+                      >
+                        {'\u27f6'}
+                      </Button>
+                      <Button
+                        value={index}
+                        variant="danger"
+                        className="ml-2"
+                        onClick={this.btnDelClick}
+                      >
+                        x
+                      </Button>
+                    </Row>
+                  </td>
                 </tr>
               );
             })}
           </tbody>
         </Table>
-        <Button variant="primary" name="btnAddOwner" className="col">
+        <Button variant="primary" className="col" onClick={this.btnAddClick}>
           +
         </Button>
       </div>
