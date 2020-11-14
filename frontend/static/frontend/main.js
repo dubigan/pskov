@@ -2225,9 +2225,6 @@ var Owners = /*#__PURE__*/function (_Component) {
           sortedBy: _sortedBy
         });
       }
-    }, _this.arrow = function () {
-      //console.log('arrow', this.state.sortedBy.direction);
-      return _this.state.sortedBy.direction === 'asc' ? _this.upArrow : _this.downArrow;
     }, _temp));
   }
 
@@ -2258,7 +2255,7 @@ var Owners = /*#__PURE__*/function (_Component) {
       }, this.state.sortedBy.name === 'last_name' && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         id: "last_name",
         className: "ml-2"
-      }, this.arrow()), ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      }, this.arrow), ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         id: "last_name",
         className: "ml-2"
       }, "\u0424\u0430\u043C\u0438\u043B\u0438\u044F"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("th", {
@@ -2269,7 +2266,7 @@ var Owners = /*#__PURE__*/function (_Component) {
       }, this.state.sortedBy.name === 'name' && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         id: "name",
         className: "ml-2"
-      }, this.arrow()), ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      }, this.arrow), ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         id: "name",
         className: "ml-2"
       }, "\u0418\u043C\u044F"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("th", {
@@ -2282,7 +2279,7 @@ var Owners = /*#__PURE__*/function (_Component) {
       }, this.state.sortedBy.name === 'gender' && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         id: "gender",
         className: "ml-2"
-      }, this.arrow()), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      }, this.arrow), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         id: "gender",
         className: "ml-2"
       }, "\u041F\u043E\u043B"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("th", {
@@ -2293,7 +2290,7 @@ var Owners = /*#__PURE__*/function (_Component) {
       }, this.state.sortedBy.name === 'age' && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         id: "age",
         className: "ml-2"
-      }, this.arrow()), ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      }, this.arrow), ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         id: "age",
         className: "ml-2"
       }, "\u0412\u043E\u0437\u0440\u0430\u0441\u0442"))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("tbody", null, this.state.owners.map(function (o, index) {
@@ -2305,6 +2302,12 @@ var Owners = /*#__PURE__*/function (_Component) {
         name: "btnAddOwner",
         className: "col"
       }, "+"));
+    }
+  }, {
+    key: "arrow",
+    get: function get() {
+      //console.log('arrow', this.state.sortedBy.direction);
+      return this.state.sortedBy.direction === 'asc' ? this.upArrow : this.downArrow;
     }
   }]);
 

@@ -66,11 +66,11 @@ export class Owners extends Component {
     }
   };
 
-  arrow = () => {
+  get arrow() {
     //console.log('arrow', this.state.sortedBy.direction);
 
     return this.state.sortedBy.direction === 'asc' ? this.upArrow : this.downArrow;
-  };
+  }
 
   render() {
     return (
@@ -82,7 +82,7 @@ export class Owners extends Component {
                 <Row id="last_name">
                   {this.state.sortedBy.name === 'last_name' && (
                     <div id="last_name" className="ml-2">
-                      {this.arrow()}
+                      {this.arrow}
                     </div>
                   )}{' '}
                   <div id="last_name" className="ml-2">
@@ -94,7 +94,7 @@ export class Owners extends Component {
                 <Row id="name">
                   {this.state.sortedBy.name === 'name' && (
                     <div id="name" className="ml-2">
-                      {this.arrow()}
+                      {this.arrow}
                     </div>
                   )}{' '}
                   <div id="name" className="ml-2">
@@ -107,7 +107,7 @@ export class Owners extends Component {
                 <Row id="gender">
                   {this.state.sortedBy.name === 'gender' && (
                     <div id="gender" className="ml-2">
-                      {this.arrow()}
+                      {this.arrow}
                     </div>
                   )}
                   <div id="gender" className="ml-2">
@@ -119,7 +119,7 @@ export class Owners extends Component {
                 <Row id="age">
                   {this.state.sortedBy.name === 'age' && (
                     <div id="age" className="ml-2">
-                      {this.arrow()}
+                      {this.arrow}
                     </div>
                   )}{' '}
                   <div id="age" className="ml-2">
