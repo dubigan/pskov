@@ -6,8 +6,8 @@ export class OwnerDetail extends Component {
   state = {
     alert: {
       showAlert: false,
-      errors: null,
-      messages: null,
+      errors: [],
+      messages: [],
     },
     owner: {
       cars: [],
@@ -35,6 +35,14 @@ export class OwnerDetail extends Component {
     }
   };
 
+  getErrors = (data) => {
+    const errors = [];
+    for (let key in data) {
+      errors.push(data[key]);
+    }
+    return errors;
+  };
+
   getOwner = () => {
     axios
       .post(this.url, {})
@@ -45,7 +53,9 @@ export class OwnerDetail extends Component {
       })
       .catch((err) => {
         console.log('getOwnerDetail getOwner', err.response.data);
-        this.setState({ alert: { errors: err.response.data, showAlert: true } });
+        this.setState({
+          alert: { messages: [], errors: this.getErrors(err.response.data), showAlert: true },
+        });
       });
   };
 
@@ -57,12 +67,18 @@ export class OwnerDetail extends Component {
 
         this.setState({
           owner: res.data,
-          alert: { showAlert: true, messages: 'Информация о владельце сохранена' },
+          alert: {
+            showAlert: true,
+            messages: this.state.alert.messages.push('Информация о владельце сохранена'),
+            errors: [],
+          },
         });
       })
       .catch((err) => {
         console.log('getOwnerDetail saveOwner', err.response.data);
-        this.setState({ alert: { errors: err.response.data, showAlert: true } });
+        this.setState({
+          alert: { messages: [], errors: this.getErrors(err.response.data), showAlert: true },
+        });
       });
   };
 
@@ -94,11 +110,16 @@ export class OwnerDetail extends Component {
 
   showAlert = () => {
     if (this.state.alert.showAlert) {
-      setTimeout(() => this.setState({ alert: { errors: null, showAlert: false } }), 5000);
-      if (this.state.alert.errors)
-        return <Alert variant="danger">{JSON.stringify(this.state.alert.errors)}</Alert>;
-      if (this.state.alert.messages)
-        return <Alert variant="primary">{JSON.stringify(this.state.alert.messages)}</Alert>;
+      setTimeout(
+        () => this.setState({ alert: { messages: [], errors: [], showAlert: false } }),
+        5000
+      );
+      if (this.state.alert.errors.length > 0)
+        return <Alert variant="danger">{this.state.alert.errors.join('. ')}</Alert>;
+      if (this.state.alert.messages.length > 0)
+        return (
+          <Alert variant="primary">{JSON.stringify(this.state.alert.messages.join('. '))}</Alert>
+        );
     }
     return <div />;
   };

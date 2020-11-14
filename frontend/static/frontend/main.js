@@ -2284,8 +2284,8 @@ var OwnerDetail = /*#__PURE__*/function (_Component) {
     return _possibleConstructorReturn(_this, (_temp = _this = _super.call.apply(_super, [this].concat(args)), _this.state = {
       alert: {
         showAlert: false,
-        errors: null,
-        messages: null
+        errors: [],
+        messages: []
       },
       owner: {
         cars: [],
@@ -2303,6 +2303,14 @@ var OwnerDetail = /*#__PURE__*/function (_Component) {
         // digits only
         e.preventDefault();
       }
+    }, _this.getErrors = function (data) {
+      var errors = [];
+
+      for (var key in data) {
+        errors.push(data[key]);
+      }
+
+      return errors;
     }, _this.getOwner = function () {
       axios__WEBPACK_IMPORTED_MODULE_1___default().post(_this.url, {}).then(function (res) {
         //console.log('getOwner', res.data);
@@ -2314,7 +2322,8 @@ var OwnerDetail = /*#__PURE__*/function (_Component) {
 
         _this.setState({
           alert: {
-            errors: err.response.data,
+            messages: [],
+            errors: _this.getErrors(err.response.data),
             showAlert: true
           }
         });
@@ -2328,7 +2337,8 @@ var OwnerDetail = /*#__PURE__*/function (_Component) {
           owner: res.data,
           alert: {
             showAlert: true,
-            messages: 'Информация о владельце сохранена'
+            messages: _this.state.alert.messages.push('Информация о владельце сохранена'),
+            errors: []
           }
         });
       }).catch(function (err) {
@@ -2336,7 +2346,8 @@ var OwnerDetail = /*#__PURE__*/function (_Component) {
 
         _this.setState({
           alert: {
-            errors: err.response.data,
+            messages: [],
+            errors: _this.getErrors(err.response.data),
             showAlert: true
           }
         });
@@ -2370,17 +2381,18 @@ var OwnerDetail = /*#__PURE__*/function (_Component) {
         setTimeout(function () {
           return _this.setState({
             alert: {
-              errors: null,
+              messages: [],
+              errors: [],
               showAlert: false
             }
           });
         }, 5000);
-        if (_this.state.alert.errors) return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__.default, {
+        if (_this.state.alert.errors.length > 0) return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__.default, {
           variant: "danger"
-        }, JSON.stringify(_this.state.alert.errors));
-        if (_this.state.alert.messages) return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__.default, {
+        }, _this.state.alert.errors.join('. '));
+        if (_this.state.alert.messages.length > 0) return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__.default, {
           variant: "primary"
-        }, JSON.stringify(_this.state.alert.messages));
+        }, JSON.stringify(_this.state.alert.messages.join('. ')));
       }
 
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null);
