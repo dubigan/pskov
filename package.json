@@ -1,9 +1,9 @@
 {
-    "name": "formoza",
-    "description": "",
-    "version": "1.0.0",
-    "engines": {
-        "node": "14.7.0",
-        "npm": "6.14.7"
-    }
+  "name": "pskov",
+  "description": "",
+  "version": "1.0.0",
+  "engines": {
+    "node": "14.7.0",
+    "npm": "6.14.7"
+  }
 }
