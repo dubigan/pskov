@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Card, Row, Form, Button, Alert } from 'react-bootstrap';
+import { Card, Row, Form, Button, Alert, Col } from 'react-bootstrap';
+import { Cars } from './Cars';
 
 export class OwnerDetail extends Component {
   state = {
@@ -10,6 +11,7 @@ export class OwnerDetail extends Component {
       messages: [],
     },
     owner: {
+      id: -1,
       cars: [],
       name: '',
       patronymic: '',
@@ -47,7 +49,7 @@ export class OwnerDetail extends Component {
     axios
       .post(this.url, {})
       .then((res) => {
-        //console.log('getOwner', res.data);
+        console.log('getOwner', res.data);
 
         this.setState({ owner: res.data });
       })
@@ -69,7 +71,7 @@ export class OwnerDetail extends Component {
           owner: res.data,
           alert: {
             showAlert: true,
-            messages: this.state.alert.messages.push('Информация о владельце сохранена'),
+            messages: ['Информация о владельце сохранена'],
             errors: [],
           },
         });
@@ -117,11 +119,20 @@ export class OwnerDetail extends Component {
       if (this.state.alert.errors.length > 0)
         return <Alert variant="danger">{this.state.alert.errors.join('. ')}</Alert>;
       if (this.state.alert.messages.length > 0)
-        return (
-          <Alert variant="primary">{JSON.stringify(this.state.alert.messages.join('. '))}</Alert>
-        );
+        return <Alert variant="primary">{this.state.alert.messages.join('. ')}</Alert>;
     }
     return <div />;
+  };
+
+  btnNewCarClick = () => {
+    axios
+      .post(this.url, { btn_add: '' })
+      .then((res) => {
+        if (res.data.redirect) {
+          window.location.href = res.data['redirect'];
+        }
+      })
+      .catch((err) => console.log('btnAddClick', err.response.data));
   };
 
   render() {
@@ -129,7 +140,7 @@ export class OwnerDetail extends Component {
       <div>
         {this.showAlert()}
         <Card>
-          <Card.Title>Клиент</Card.Title>
+          <Card.Title>Автовладелец</Card.Title>
           <Card.Body>
             <Row>
               <div className="col-5">
@@ -217,6 +228,33 @@ export class OwnerDetail extends Component {
               </div>
             </div>
           </Card.Body>
+        </Card>
+        <Card>
+          <Card.Title>Автомобили</Card.Title>
+          <Card.Header>
+            <Row className="spacer">
+              <Col xs={12}>
+                <Button
+                  variant="primary"
+                  className="col"
+                  name="add_car"
+                  onClick={this.btnNewCarClick}
+                >
+                  Добавить автомобиль
+                </Button>
+              </Col>
+            </Row>
+          </Card.Header>
+          <div className="row spacer">
+            <div className="col-12">
+              <Cars
+                owner={this.state.owner.id}
+                withButtons="true"
+                withOwnerInfo="false"
+                withSearch="false"
+              />
+            </div>
+          </div>
         </Card>
       </div>
     );

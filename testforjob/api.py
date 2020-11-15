@@ -47,35 +47,89 @@ class OwnerDetailView(APIView):
 
   def post(self, request, format=None):
     #print('OwnerDetailView', request.data)
+    if request.data.get('btn_add', None) != None:
+      request.session['car_pk'] = -1
+      return Response({ 'redirect': '/testforjob/car'})
+
     # getOwner
     owner = None
     if (owner_pk := request.session.get('owner_pk', -1)) != -1:
       owner = Owner.objects.get(pk=owner_pk)
     else:
       owner = Owner()
+    
     if (owner_data := request.data.get('owner', None)) != None: # save owner
       #print('OwnerDetailView owner_data', owner_data)
       ownerSer = OwnerSerializer(owner, data=owner_data)
       if ownerSer.is_valid(raise_exception=True):
         owner = ownerSer.save()
+    
     ownerSer = OwnerSerializer(owner)
     return Response(ownerSer.data)
 
 
+def getCar(request):
+  car_pk = request.data.get('car_pk', None)
+  return Car.objects.get(pk=car_pk)
 class CarsListView(APIView):
 
   def get(self, request, format=None):
     return Response()
 
   def post(self, request, format=None):
+    if request.data.get('btn_del', None) != None:
+      car = getCar(request)
+      car.delete()
+
+    if request.data.get('btn_edit', None) != None:
+      car = getCar(request)
+      request.session['car_pk'] = car.pk
+      return Response({ 'redirect': '/testforjob/car'})
+
     cars = None
-    if (owner_id := request.data.get('owner', None)) !=None:
-      cars = Car.objects.get(owner = owner_id)
+    if (owner_id := request.data.get('owner_pk', -1)) != -1:
+      #print('CarsListView owner_id', owner_id)
+      try:
+        cars = Car.objects.filter(owner = owner_id)
+      except Exception as e:
+        print('CarsListView', e) 
+        cars = Car.objects.none()
     else:
       cars = Car.objects.all()
     carsSer = CarSerializer(cars, many=True)
-    return Response({carsSer.data})
+
+    if (sortedBy := request.data.get('sorted_by', None)) != None:
+      #print('owners post sortedBy', sortedBy)
+      direction = '-' if sortedBy['direction'] == 'desc' else ''
+      cars = Car.objects.all().order_by(direction + sortedBy['name'])
+      carsSer = CarSerializer(cars, many=True)
+
+    return Response(carsSer.data)
   
+
+class CarDetailView(APIView):
+
+  def get(self, request, format=None):
+    return Response()
+
+  def post(self, request, format=None):
+    car = Car()
+    if (owner_pk := request.session.get('owner_pk', -1)) != -1:
+      owner = Owner.objects.get(pk = owner_pk)
+      car.owner = owner
+    if (car_pk := request.session.get('car_pk', -1)) > -1:
+      car = Car.objects.get(pk=car_pk)
+    carSer = CarSerializer(car)
+
+    if (car_data := request.data.get('car', None)) != None: # save car
+      #print('CarDetailView car_data', car_data)
+      carSer = CarSerializer(car, data=car_data)
+      if carSer.is_valid(raise_exception=True):
+        car = carSer.save()
+
+    return Response(carSer.data)
+
+
 
 @api_view(('POST',))
 def get_manufacturers(request, format=None):
