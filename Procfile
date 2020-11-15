@@ -1,1 +1,1 @@
-web: gunicorn formoza.wsgi
+web: gunicorn pskov.wsgi
