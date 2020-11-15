@@ -158,8 +158,9 @@ export class CarDetail extends Component {
                   <DatePicker
                     className="col-11"
                     //format="dd.MM.yyyy"
-                    //locale="ru"
+                    locale={ru}
                     name="production"
+                    showYearDropdown={true}
                     onChange={this.changeDate}
                     value={this.state.car.production}
                   />
