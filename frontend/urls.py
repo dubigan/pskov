@@ -8,6 +8,7 @@ urlpatterns = [
     path('testforjob/owner/', views.index),
     path('testforjob/cars/', views.index),
     path('testforjob/car/', views.index),
+    path('testforjob/dashboard/', views.index),
     #path('sc/order/new/', views.index),
 
 ]

@@ -6,6 +6,7 @@ import { OwnerDetail } from './components/OwnerDetail';
 import { Cars } from './components/Cars';
 import { CarDetail } from './components/CarDetail';
 import { Header } from './components/Header';
+import { Dashboard } from './components/Dashboard';
 
 export default class App extends Component {
   render() {
@@ -19,6 +20,7 @@ export default class App extends Component {
               <Route path="/testforjob/owner" component={OwnerDetail} />
               <Route path="/testforjob/cars" component={Cars} />
               <Route path="/testforjob/car" component={CarDetail} />
+              <Route path="/testforjob/dashboard" component={Dashboard} />
               {/*
               <Route path="/sc/orders" component={Orders} />
               <Route path="/sc/order/new" component={OrderEdit} /> */}

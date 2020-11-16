@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from django.core.paginator import Paginator
 from .models import *
 from .serializers import *
 
@@ -133,6 +134,23 @@ class CarDetailView(APIView):
 
     return Response(carSer.data)
 
+
+class Dashboard(APIView):
+  def get(self, request, format=None):
+    return Response()
+
+  def post(self, request, format=None):
+    return Response()
+
+
+@api_view(('POST',))
+def downloadDB(request, format=None):
+  pass
+
+
+@api_view(('POST',))
+def uploadDB(request, format=None):
+  pass
 
 
 @api_view(('POST',))

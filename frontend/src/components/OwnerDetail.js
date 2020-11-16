@@ -177,7 +177,7 @@ export class OwnerDetail extends Component {
                       <small>М</small>
                     </Form.Label>
                     <input
-                      className="form-control col-2"
+                      className="form-control col-1 border-0"
                       name="gender-m"
                       type="radio"
                       checked={this.state.owner.gender === 'm' ? 1 : 0}
@@ -187,7 +187,7 @@ export class OwnerDetail extends Component {
                       <small>Ж</small>
                     </Form.Label>
                     <input
-                      className="form-control col-2"
+                      className="form-control col-1"
                       name="gender-f"
                       type="radio"
                       checked={this.state.owner.gender === 'f' ? 1 : 0}
