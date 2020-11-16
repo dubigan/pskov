@@ -49,7 +49,7 @@ class OwnerDetailView(APIView):
     #print('OwnerDetailView', request.data)
     if request.data.get('btn_add', None) != None:
       request.session['car_pk'] = -1
-      request.session['back_from_car'] = request.path
+      request.session['back_from_car'] = request.data.get('url', None)
       return Response({ 'redirect': '/testforjob/car'})
 
     # getOwner
@@ -85,7 +85,7 @@ class CarsListView(APIView):
     if request.data.get('btn_edit', None) != None:
       car = getCar(request)
       request.session['car_pk'] = car.pk
-      request.session['back_from_car'] = request.path
+      request.session['back_from_car'] = request.data.get('url', None)
       return Response({ 'redirect': '/testforjob/car'})
 
     cars = None

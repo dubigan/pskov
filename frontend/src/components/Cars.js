@@ -101,7 +101,11 @@ export class Cars extends Component {
   };
   btnEditClick = (e) => {
     axios
-      .post(this.url, { btn_edit: '', car_pk: this.state.cars[+e.target.value].id })
+      .post(this.url, {
+        btn_edit: '',
+        car_pk: this.state.cars[+e.target.value].id,
+        url: window.location.pathname,
+      })
       .then((res) => {
         if (res.data.redirect) {
           window.location.href = res.data['redirect'];

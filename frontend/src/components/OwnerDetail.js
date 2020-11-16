@@ -126,7 +126,7 @@ export class OwnerDetail extends Component {
 
   btnNewCarClick = () => {
     axios
-      .post(this.url, { btn_add: '' })
+      .post(this.url, { btn_add: '', url: window.location.pathname })
       .then((res) => {
         if (res.data.redirect) {
           window.location.href = res.data['redirect'];
