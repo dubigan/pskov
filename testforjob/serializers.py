@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from datetime import date, datetime
 from .models import *
 
 class ManufacturerSerializer(serializers.ModelSerializer):
@@ -23,8 +24,18 @@ class CarSerializer(serializers.ModelSerializer):
     return data
 
   def validate_production(self, data):
-    if data == None: 
+    if data == None:
       raise serializers.ValidationError("Поле Дата выпуска не может быть пустым")
+
+    try:
+      dt = datetime.strptime(data, '%d.%m.%Y')
+    except Exception as e: 
+      #print("validate_production", e)
+      raise serializers.ValidationError("Неверный формат даты. Используйте формат dd.mm.yyyy")
+    
+    if dt > datetime.now():
+      raise serializers.ValidationError("Дата не может быть в будущем")
+    
     return data
 
   def validate_color(self, data):
