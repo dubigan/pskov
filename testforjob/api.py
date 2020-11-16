@@ -49,6 +49,7 @@ class OwnerDetailView(APIView):
     #print('OwnerDetailView', request.data)
     if request.data.get('btn_add', None) != None:
       request.session['car_pk'] = -1
+      request.session['back_from_car'] = request.path
       return Response({ 'redirect': '/testforjob/car'})
 
     # getOwner
@@ -84,6 +85,7 @@ class CarsListView(APIView):
     if request.data.get('btn_edit', None) != None:
       car = getCar(request)
       request.session['car_pk'] = car.pk
+      request.session['back_from_car'] = request.path
       return Response({ 'redirect': '/testforjob/car'})
 
     cars = None
@@ -126,6 +128,8 @@ class CarDetailView(APIView):
       carSer = CarSerializer(car, data=car_data)
       if carSer.is_valid(raise_exception=True):
         car = carSer.save()
+        if (back_from_car := request.session.get('back_from_car', None)) != None:
+          return Response({'redirect': back_from_car.replace('/api', '')})
 
     return Response(carSer.data)
 

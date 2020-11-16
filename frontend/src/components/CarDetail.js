@@ -94,6 +94,9 @@ export class CarDetail extends Component {
       .post(this.url, { car: this.state.car })
       .then((res) => {
         console.log('saveCar', res.data);
+        // if (res.data.redirect) {
+        //   window.location.href = res.data['redirect'];
+        // }
 
         this.setState({
           car: res.data,
