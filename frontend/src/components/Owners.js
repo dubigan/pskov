@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Table, Button, Row } from 'react-bootstrap';
+import { Table, Button, Row, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import Loader from './Loader';
 
 export class Owners extends Component {
@@ -120,55 +120,79 @@ export class Owners extends Component {
         <Table striped bordered hover>
           <thead>
             <tr>
-              <th id="last_name" onClick={this.btnSortClick}>
-                <Row id="last_name">
-                  {this.state.sortedBy.name === 'last_name' && (
+              <OverlayTrigger
+                key={1}
+                placement={'bottom'}
+                overlay={<Tooltip id={`tooltip-1`}>Нажмите для сортировки</Tooltip>}
+              >
+                <th id="last_name" onClick={this.btnSortClick}>
+                  <Row id="last_name">
+                    {this.state.sortedBy.name === 'last_name' && (
+                      <div id="last_name" className="ml-2">
+                        {this.arrow}
+                      </div>
+                    )}{' '}
                     <div id="last_name" className="ml-2">
-                      {this.arrow}
+                      Фамилия
                     </div>
-                  )}{' '}
-                  <div id="last_name" className="ml-2">
-                    Фамилия
-                  </div>
-                </Row>
-              </th>
-              <th id="name" onClick={this.btnSortClick}>
-                <Row id="name">
-                  {this.state.sortedBy.name === 'name' && (
+                  </Row>
+                </th>
+              </OverlayTrigger>
+              <OverlayTrigger
+                key={2}
+                placement={'bottom'}
+                overlay={<Tooltip id={`tooltip-2`}>Нажмите для сортировки</Tooltip>}
+              >
+                <th id="name" onClick={this.btnSortClick}>
+                  <Row id="name">
+                    {this.state.sortedBy.name === 'name' && (
+                      <div id="name" className="ml-2">
+                        {this.arrow}
+                      </div>
+                    )}{' '}
                     <div id="name" className="ml-2">
-                      {this.arrow}
+                      Имя
                     </div>
-                  )}{' '}
-                  <div id="name" className="ml-2">
-                    Имя
-                  </div>
-                </Row>
-              </th>
+                  </Row>
+                </th>
+              </OverlayTrigger>
               <th id="patronymic">Отчество</th>
-              <th id="gender" onClick={this.btnSortClick}>
-                <Row id="gender">
-                  {this.state.sortedBy.name === 'gender' && (
+              <OverlayTrigger
+                key={3}
+                placement={'bottom'}
+                overlay={<Tooltip id={`tooltip-3`}>Нажмите для сортировки</Tooltip>}
+              >
+                <th id="gender" onClick={this.btnSortClick}>
+                  <Row id="gender">
+                    {this.state.sortedBy.name === 'gender' && (
+                      <div id="gender" className="ml-2">
+                        {this.arrow}
+                      </div>
+                    )}
                     <div id="gender" className="ml-2">
-                      {this.arrow}
+                      Пол
                     </div>
-                  )}
-                  <div id="gender" className="ml-2">
-                    Пол
-                  </div>
-                </Row>
-              </th>
-              <th id="age" onClick={this.btnSortClick}>
-                <Row id="age">
-                  {this.state.sortedBy.name === 'age' && (
+                  </Row>
+                </th>
+              </OverlayTrigger>
+              <OverlayTrigger
+                key={4}
+                placement={'bottom'}
+                overlay={<Tooltip id={`tooltip-4`}>Нажмите для сортировки</Tooltip>}
+              >
+                <th id="age" onClick={this.btnSortClick}>
+                  <Row id="age">
+                    {this.state.sortedBy.name === 'age' && (
+                      <div id="age" className="ml-2">
+                        {this.arrow}
+                      </div>
+                    )}{' '}
                     <div id="age" className="ml-2">
-                      {this.arrow}
+                      Возраст
                     </div>
-                  )}{' '}
-                  <div id="age" className="ml-2">
-                    Возраст
-                  </div>
-                </Row>
-              </th>
+                  </Row>
+                </th>
+              </OverlayTrigger>
               <th></th>
             </tr>
           </thead>
@@ -183,22 +207,34 @@ export class Owners extends Component {
                   <td>{o.age}</td>
                   <td style={{ width: 100 + 'px' }}>
                     <Row>
-                      <Button
-                        value={index}
-                        variant="primary"
-                        className="ml-2"
-                        onClick={this.btnEditClick}
+                      <OverlayTrigger
+                        key={5}
+                        placement={'bottom'}
+                        overlay={<Tooltip id={`tooltip-5`}>Редактирование</Tooltip>}
                       >
-                        {'\u27f6'}
-                      </Button>
-                      <Button
-                        value={index}
-                        variant="danger"
-                        className="ml-2"
-                        onClick={this.btnDelClick}
+                        <Button
+                          value={index}
+                          variant="primary"
+                          className="ml-2"
+                          onClick={this.btnEditClick}
+                        >
+                          {'\u27f6'}
+                        </Button>
+                      </OverlayTrigger>
+                      <OverlayTrigger
+                        key={6}
+                        placement={'bottom'}
+                        overlay={<Tooltip id={`tooltip-6`}>Удаление</Tooltip>}
                       >
-                        x
-                      </Button>
+                        <Button
+                          value={index}
+                          variant="danger"
+                          className="ml-2"
+                          onClick={this.btnDelClick}
+                        >
+                          x
+                        </Button>
+                      </OverlayTrigger>
                     </Row>
                   </td>
                 </tr>
@@ -206,9 +242,15 @@ export class Owners extends Component {
             })}
           </tbody>
         </Table>
-        <Button variant="primary" className="col" onClick={this.btnAddClick}>
-          +
-        </Button>
+        <OverlayTrigger
+          key={7}
+          placement={'bottom'}
+          overlay={<Tooltip id={`tooltip-7`}>Добавление нового автовладельца</Tooltip>}
+        >
+          <Button variant="primary" className="col" onClick={this.btnAddClick}>
+            +
+          </Button>
+        </OverlayTrigger>
       </div>
     );
   }

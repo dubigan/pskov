@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Table, Button, Row } from 'react-bootstrap';
+import { Table, Button, Row, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Loader from './Loader';
+import { CarDeleteDialog } from './CarDeleteDialog';
 
 export class Cars extends Component {
   state = {
     loading: false,
+    showDeleteDialog: false,
     cars: [],
+    carDelete: '',
     sortedBy: {
       name: 'model',
       direction: 'asc',
@@ -85,19 +88,12 @@ export class Cars extends Component {
   }
 
   btnDelClick = (e) => {
-    this.setState({ loading: true });
-    axios
-      .post(this.url, {
-        sorted_by: this.state.sortedBy,
-        btn_del: '',
-        car_pk: this.state.cars[+e.target.value].id,
-      })
-      .then((res) => {
-        console.log('delBtnClick', res.data);
-        this.setState({ cars: res.data });
-      })
-      .catch((err) => console.log('delBtnClick', err.response.data))
-      .finally(() => this.setState({ loading: false }));
+    const car = this.state.cars.filter((c) => +c.id === +e.target.value)[0];
+    //console.log("order out", orderOut);
+    this.setState({
+      showDeleteDialog: true,
+      carDelete: car,
+    });
   };
   btnEditClick = (e) => {
     axios
@@ -124,85 +120,145 @@ export class Cars extends Component {
       .catch((err) => console.log('btnAddClick', err.response.data));
   };
 
+  carDelete = (confirm) => {
+    this.setState({ showDeleteDialog: false });
+    console.log('carDelete', confirm);
+
+    if (confirm === 'true') {
+      this.setState({ loading: true });
+      axios
+        .post(this.url, {
+          sorted_by: this.state.sortedBy,
+          btn_del: '',
+          car_pk: this.state.carDelete.id,
+        })
+        .then((res) => {
+          console.log('delBtnClick', res.data);
+          this.setState({ cars: res.data });
+        })
+        .catch((err) => console.log('delBtnClick', err.response.data))
+        .finally(() => this.setState({ loading: false }));
+    }
+  };
+
   render() {
     return (
       <div>
         {this.state.loading && <Loader />}
+        {this.state.showDeleteDialog && (
+          <CarDeleteDialog params={this.state} carDelete={this.carDelete} />
+        )}
         <Table striped bordered hover>
           <thead>
             <tr>
-              <th id="manufacturer" onClick={this.btnSortClick}>
-                <Row id="manufacturer">
-                  {this.state.sortedBy.name === 'manufacturer' && (
+              <OverlayTrigger
+                key={1}
+                placement={'bottom'}
+                overlay={<Tooltip id={`tooltip-1`}>Нажмите для сортировки</Tooltip>}
+              >
+                <th id="manufacturer" onClick={this.btnSortClick}>
+                  <Row id="manufacturer">
+                    {this.state.sortedBy.name === 'manufacturer' && (
+                      <div id="manufacturer" className="ml-2">
+                        {this.arrow}
+                      </div>
+                    )}{' '}
                     <div id="manufacturer" className="ml-2">
-                      {this.arrow}
+                      Производитель
                     </div>
-                  )}{' '}
-                  <div id="manufacturer" className="ml-2">
-                    Производитель
-                  </div>
-                </Row>
-              </th>
-              <th id="model" onClick={this.btnSortClick}>
-                <Row id="model">
-                  {this.state.sortedBy.name === 'model' && (
+                  </Row>
+                </th>
+              </OverlayTrigger>
+              <OverlayTrigger
+                key={2}
+                placement={'bottom'}
+                overlay={<Tooltip id={`tooltip-2`}>Нажмите для сортировки</Tooltip>}
+              >
+                <th id="model" onClick={this.btnSortClick}>
+                  <Row id="model">
+                    {this.state.sortedBy.name === 'model' && (
+                      <div id="model" className="ml-2">
+                        {this.arrow}
+                      </div>
+                    )}{' '}
                     <div id="model" className="ml-2">
-                      {this.arrow}
+                      Модель
                     </div>
-                  )}{' '}
-                  <div id="model" className="ml-2">
-                    Модель
-                  </div>
-                </Row>
-              </th>
-              <th id="production" onClick={this.btnSortClick}>
-                <Row id="production">
-                  {this.state.sortedBy.name === 'production' && (
+                  </Row>
+                </th>
+              </OverlayTrigger>
+              <OverlayTrigger
+                key={3}
+                placement={'bottom'}
+                overlay={<Tooltip id={`tooltip-3`}>Нажмите для сортировки</Tooltip>}
+              >
+                <th id="production" onClick={this.btnSortClick}>
+                  <Row id="production">
+                    {this.state.sortedBy.name === 'production' && (
+                      <div id="production" className="ml-2">
+                        {this.arrow}
+                      </div>
+                    )}{' '}
                     <div id="production" className="ml-2">
-                      {this.arrow}
+                      Дата выпуска
                     </div>
-                  )}{' '}
-                  <div id="production" className="ml-2">
-                    Дата выпуска
-                  </div>
-                </Row>
-              </th>
-              <th id="color" onClick={this.btnSortClick}>
-                <Row id="color">
-                  {this.state.sortedBy.name === 'color' && (
+                  </Row>
+                </th>
+              </OverlayTrigger>
+              <OverlayTrigger
+                key={4}
+                placement={'bottom'}
+                overlay={<Tooltip id={`tooltip-4`}>Нажмите для сортировки</Tooltip>}
+              >
+                <th id="color" onClick={this.btnSortClick}>
+                  <Row id="color">
+                    {this.state.sortedBy.name === 'color' && (
+                      <div id="color" className="ml-2">
+                        {this.arrow}
+                      </div>
+                    )}
                     <div id="color" className="ml-2">
-                      {this.arrow}
+                      Цвет
                     </div>
-                  )}
-                  <div id="color" className="ml-2">
-                    Цвет
-                  </div>
-                </Row>
-              </th>
-              <th id="power" onClick={this.btnSortClick}>
-                <Row id="power">
-                  {this.state.sortedBy.name === 'power' && (
+                  </Row>
+                </th>
+              </OverlayTrigger>
+              <OverlayTrigger
+                key={5}
+                placement={'bottom'}
+                overlay={<Tooltip id={`tooltip-5`}>Нажмите для сортировки</Tooltip>}
+              >
+                <th id="power" onClick={this.btnSortClick}>
+                  <Row id="power">
+                    {this.state.sortedBy.name === 'power' && (
+                      <div id="power" className="ml-2">
+                        {this.arrow}
+                      </div>
+                    )}{' '}
                     <div id="power" className="ml-2">
-                      {this.arrow}
+                      Мощность
                     </div>
-                  )}{' '}
-                  <div id="power" className="ml-2">
-                    Мощность
-                  </div>
-                </Row>
-              </th>
-              <th id="mileage" onClick={this.btnSortClick}>
-                <Row id="mileage">
-                  {this.state.sortedBy.name === 'mileage' && (
+                  </Row>
+                </th>
+              </OverlayTrigger>
+              <OverlayTrigger
+                key={6}
+                placement={'bottom'}
+                overlay={<Tooltip id={`tooltip-6`}>Нажмите для сортировки</Tooltip>}
+              >
+                <th id="mileage" onClick={this.btnSortClick}>
+                  <Row id="mileage">
+                    {this.state.sortedBy.name === 'mileage' && (
+                      <div id="mileage" className="ml-2">
+                        {this.arrow}
+                      </div>
+                    )}{' '}
                     <div id="mileage" className="ml-2">
-                      {this.arrow}
+                      Пробег
                     </div>
-                  )}{' '}
-                  <div id="mileage" className="ml-2">
-                    Пробег
-                  </div>
-                </Row>
-              </th>
+                  </Row>
+                </th>
+              </OverlayTrigger>
               <th></th>
             </tr>
           </thead>
@@ -218,22 +274,34 @@ export class Cars extends Component {
                   <td>{o.mileage}</td>
                   <td style={{ width: 100 + 'px' }}>
                     <Row>
-                      <Button
-                        value={index}
-                        variant="primary"
-                        className="ml-2"
-                        onClick={this.btnEditClick}
+                      <OverlayTrigger
+                        key={7}
+                        placement={'bottom'}
+                        overlay={<Tooltip id={`tooltip-7`}>Редактировать</Tooltip>}
                       >
-                        {'\u27f6'}
-                      </Button>
-                      <Button
-                        value={index}
-                        variant="danger"
-                        className="ml-2"
-                        onClick={this.btnDelClick}
+                        <Button
+                          value={o.id}
+                          variant="primary"
+                          className="ml-2"
+                          onClick={this.btnEditClick}
+                        >
+                          {'\u27f6'}
+                        </Button>
+                      </OverlayTrigger>
+                      <OverlayTrigger
+                        key={8}
+                        placement={'bottom'}
+                        overlay={<Tooltip id={`tooltip-8`}>Удалить</Tooltip>}
                       >
-                        x
-                      </Button>
+                        <Button
+                          value={o.id}
+                          variant="danger"
+                          className="ml-2"
+                          onClick={this.btnDelClick}
+                        >
+                          x
+                        </Button>
+                      </OverlayTrigger>
                     </Row>
                   </td>
                 </tr>
