@@ -1,157 +1,24 @@
-import React, { Component } from 'react';
-import axios from 'axios';
+import React from 'react';
 import { Table, Button, Row, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Loader from './Loader';
+import { ListOfItems } from './ListOfItems';
 import { CarDeleteDialog } from './CarDeleteDialog';
 
-export class Cars extends Component {
-  state = {
-    loading: false,
-    showDeleteDialog: false,
-    cars: [],
-    carDelete: '',
-    sortedBy: {
-      name: 'model',
-      direction: 'asc',
-    },
-  };
-
+export class Cars extends ListOfItems {
   url = '/testforjob/api/cars/';
   tooltipPlace = 'bottom';
 
-  //upArrow = '&#x0225C;';
-  upArrow = '\u2191';
-  //downArrow = '&#x0225C;';
-  downArrow = '\u2193';
-
-  componentDidMount() {
-    this.getCars();
+  componentDidUpdate(prevProps, prevState) {
+    super.componentDidUpdate(prevProps, prevState);
+    if (prevProps.owner !== this.props.owner) this.getItems();
   }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.owner !== this.props.owner) this.getCars();
-  }
-
-  // getManufacturers = () => {
-  //   axios
-  //     .post('/testforjob/api/manufacturers/', {})
-  //     .then((res) => {
-  //       console.log('getManufacturers', res.data);
-
-  //       this.setState({ manufacturers: res.data });
-  //     })
-  //     .catch((err) => console.log('getManufacturers', err));
-  // };
-
-  getCars = () => {
-    console.log('getCars props.owner', this.props.owner);
-
-    axios
-      .post(this.url, { owner_pk: this.props.owner ? this.props.owner : -1 })
-      .then((res) => {
-        console.log('getCars', res.data);
-
-        this.setState({ cars: res.data });
-      })
-      .catch((err) => console.log('getCars', err));
-  };
-
-  btnSortClick = (e) => {
-    const sorted_name = e.target.id;
-    //console.log('btnSortClick e', e);
-
-    if (this.state.sortedBy.name !== sorted_name) {
-      const sortedBy = {
-        name: sorted_name,
-        direction: 'desc',
-      };
-      //console.log('btnSortClick sortedBy', sortedBy);
-      this.setState({
-        sortedBy: sortedBy,
-      });
-    } else {
-      const direction = this.state.sortedBy.direction === 'desc' ? 'asc' : 'desc';
-      //console.log('btnSortClick direction', direction);
-
-      const sortedBy = {
-        ...this.state.sortedBy,
-        direction: direction,
-      };
-      //console.log('btnSortClick', sortedBy);
-
-      this.setState({ sortedBy: sortedBy });
-    }
-  };
-
-  get arrow() {
-    //console.log('arrow', this.state.sortedBy.direction);
-    return this.state.sortedBy.direction === 'asc' ? this.upArrow : this.downArrow;
-  }
-
-  getCar = (id) => {
-    return this.state.cars.filter((c) => +c.id === +id)[0];
-  };
-
-  btnDelClick = (e) => {
-    const car = this.getCar(e.target.value);
-    //console.log("order out", orderOut);
-    this.setState({
-      showDeleteDialog: true,
-      carDelete: car,
-    });
-  };
-  btnEditClick = (e) => {
-    axios
-      .post(this.url, {
-        btn_edit: '',
-        car_pk: this.getCar(e.target.value).id,
-        url: window.location.pathname,
-      })
-      .then((res) => {
-        if (res.data.redirect) {
-          window.location.href = res.data['redirect'];
-        }
-      })
-      .catch((err) => console.log('btnEditClick', err.response.data));
-  };
-  btnAddClick = (e) => {
-    axios
-      .post(this.url, { btn_add: '' })
-      .then((res) => {
-        if (res.data.redirect) {
-          window.location.href = res.data['redirect'];
-        }
-      })
-      .catch((err) => console.log('btnAddClick', err.response.data));
-  };
-
-  carDelete = (confirm) => {
-    this.setState({ showDeleteDialog: false });
-    console.log('carDelete', confirm);
-
-    if (confirm === 'true') {
-      this.setState({ loading: true });
-      axios
-        .post(this.url, {
-          sorted_by: this.state.sortedBy,
-          btn_del: '',
-          car_pk: this.state.carDelete.id,
-        })
-        .then((res) => {
-          console.log('delBtnClick', res.data);
-          this.setState({ cars: res.data });
-        })
-        .catch((err) => console.log('delBtnClick', err.response.data))
-        .finally(() => this.setState({ loading: false }));
-    }
-  };
 
   render() {
     return (
       <div>
         {this.state.loading && <Loader />}
         {this.state.showDeleteDialog && (
-          <CarDeleteDialog params={this.state} carDelete={this.carDelete} />
+          <CarDeleteDialog params={this.state} itemDelete={this.itemDelete} />
         )}
         <Table striped bordered hover>
           <thead>
@@ -268,7 +135,7 @@ export class Cars extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.cars.map((o, index) => {
+            {this.state.items.map((o, index) => {
               return (
                 <tr key={index}>
                   <td>{o.manufacturer}</td>

@@ -35,8 +35,11 @@ class OwnersListView(APIView):
     
     if (sortedBy := request.data.get('sorted_by', None)) != None:
       #print('owners post sortedBy', sortedBy)
-      direction = '-' if sortedBy['direction'] == 'desc' else ''
-      owners = Owner.objects.all().order_by(direction + sortedBy['name'])
+      owners = Owner.objects.all()
+      name = sortedBy['name']
+      if len(name) > 0:
+        direction = '-' if sortedBy['direction'] == 'desc' else ''
+        owners = owners.order_by(direction + name)
       ownersSer = OwnerSerializer(owners, many=True)
     return Response(ownersSer.data)
 
@@ -72,7 +75,7 @@ class OwnerDetailView(APIView):
 
 
 def getCar(request):
-  car_pk = request.data.get('car_pk', None)
+  car_pk = request.data.get('item_pk', None)
   return Car.objects.get(pk=car_pk)
 class CarsListView(APIView):
 
@@ -104,8 +107,11 @@ class CarsListView(APIView):
 
     if (sortedBy := request.data.get('sorted_by', None)) != None:
       #print('owners post sortedBy', sortedBy)
-      direction = '-' if sortedBy['direction'] == 'desc' else ''
-      cars = Car.objects.all().order_by(direction + sortedBy['name'])
+      cars = Car.objects.all()
+      name = sortedBy['name']
+      if len(name) > 0:
+        direction = '-' if sortedBy['direction'] == 'desc' else ''
+        cars = cars.order_by(direction + name)
       carsSer = CarSerializer(cars, many=True)
 
     return Response(carsSer.data)

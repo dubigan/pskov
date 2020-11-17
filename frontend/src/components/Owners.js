@@ -1,148 +1,19 @@
-import React, { Component } from 'react';
-import axios from 'axios';
+import React from 'react';
 import { Table, Button, Row, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import Loader from './Loader';
+import { ListOfItems } from './ListOfItems';
 import { OwnerDeleteDialog } from './OwnerDeleteDialog';
 
-export class Owners extends Component {
-  state = {
-    loading: false,
-    showDeleteDialog: false,
-    ownerDelete: '',
-    owners: [],
-    sortedBy: {
-      name: 'last_name',
-      direction: 'asc',
-    },
-  };
-
+export class Owners extends ListOfItems {
   url = '/testforjob/api/owners/';
   tooltipPlace = 'bottom';
-
-  //upArrow = '&#x0225C;';
-  upArrow = '\u2191';
-  //downArrow = '&#x0225C;';
-  downArrow = '\u2193';
-
-  componentDidMount() {
-    this.getOwners();
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (
-      prevState.sortedBy.name !== this.state.sortedBy.name ||
-      prevState.sortedBy.direction !== this.state.sortedBy.direction
-    ) {
-      this.getOwners();
-    }
-  }
-
-  getOwners = () => {
-    this.setState({ loading: true });
-    axios
-      .post(this.url, { sorted_by: this.state.sortedBy })
-      .then((res) => {
-        console.log('getOwners', res.data);
-        this.setState({ owners: res.data });
-      })
-      .catch((err) => console.log('getOwners', err.response.data))
-      .finally(() => this.setState({ loading: false }));
-  };
-
-  btnSortClick = (e) => {
-    const sorted_name = e.target.id;
-    //console.log('btnSortClick e', e);
-
-    if (this.state.sortedBy.name !== sorted_name) {
-      const sortedBy = {
-        name: sorted_name,
-        direction: 'desc',
-      };
-      //console.log('btnSortClick sortedBy', sortedBy);
-      this.setState({
-        sortedBy: sortedBy,
-      });
-    } else {
-      const direction = this.state.sortedBy.direction === 'desc' ? 'asc' : 'desc';
-      //console.log('btnSortClick direction', direction);
-
-      const sortedBy = {
-        ...this.state.sortedBy,
-        direction: direction,
-      };
-      //console.log('btnSortClick', sortedBy);
-
-      this.setState({ sortedBy: sortedBy });
-    }
-  };
-
-  get arrow() {
-    //console.log('arrow', this.state.sortedBy.direction);
-    return this.state.sortedBy.direction === 'asc' ? this.upArrow : this.downArrow;
-  }
-
-  getOwner = (id) => {
-    return this.state.owners.filter((o) => +o.id === +id)[0];
-  };
-
-  btnDelClick = (e) => {
-    //console.log('btnDelClick', e);
-
-    const owner = this.getOwner(e.target.value);
-    console.log('btnDelClick', owner);
-    this.setState({
-      showDeleteDialog: true,
-      ownerDelete: owner,
-    });
-  };
-  btnEditClick = (e) => {
-    axios
-      .post(this.url, { btn_edit: '', owner_pk: e.target.value })
-      .then((res) => {
-        if (res.data.redirect) {
-          window.location.href = res.data['redirect'];
-        }
-      })
-      .catch((err) => console.log('btnEditClick', err.response.data));
-  };
-  btnAddClick = (e) => {
-    axios
-      .post(this.url, { btn_add: '' })
-      .then((res) => {
-        if (res.data.redirect) {
-          window.location.href = res.data['redirect'];
-        }
-      })
-      .catch((err) => console.log('btnAddClick', err.response.data));
-  };
-
-  ownerDelete = (confirm) => {
-    this.setState({ showDeleteDialog: false });
-    console.log('ownerDelete', confirm);
-
-    if (confirm === 'true') {
-      this.setState({ loading: true });
-      axios
-        .post(this.url, {
-          sorted_by: this.state.sortedBy,
-          btn_del: '',
-          owner_pk: this.state.ownerDelete.id,
-        })
-        .then((res) => {
-          console.log('delBtnClick', res.data);
-          this.setState({ owners: res.data });
-        })
-        .catch((err) => console.log('delBtnClick', err.response.data))
-        .finally(() => this.setState({ loading: false }));
-    }
-  };
 
   render() {
     return (
       <div>
         {this.state.loading && <Loader />}
         {this.state.showDeleteDialog && (
-          <OwnerDeleteDialog params={this.state} ownerDelete={this.ownerDelete} />
+          <OwnerDeleteDialog params={this.state} ownerDelete={this.itemDelete} />
         )}
 
         <Table striped bordered hover>
@@ -225,7 +96,7 @@ export class Owners extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.owners.map((o, index) => {
+            {this.state.items.map((o, index) => {
               return (
                 <tr key={index}>
                   <td>{o.last_name}</td>
