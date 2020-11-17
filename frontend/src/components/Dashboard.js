@@ -3,8 +3,8 @@ import axios from 'axios';
 
 export class Dashboard extends Component {
   state = {
-    outFileName: '',
-    loadFileName: '',
+    uploadFileName: '',
+    downloadFileName: '',
   };
 
   render() {
