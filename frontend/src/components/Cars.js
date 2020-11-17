@@ -99,7 +99,7 @@ export class Cars extends Component {
     axios
       .post(this.url, {
         btn_edit: '',
-        car_pk: this.state.cars[+e.target.value].id,
+        car_pk: this.state.cars.filter((c) => +c.id === +e.target.value)[0].id,
         url: window.location.pathname,
       })
       .then((res) => {
