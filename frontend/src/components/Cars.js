@@ -87,8 +87,12 @@ export class Cars extends Component {
     return this.state.sortedBy.direction === 'asc' ? this.upArrow : this.downArrow;
   }
 
+  getCar = () => {
+    return this.state.cars.filter((c) => +c.id === +e.target.value)[0];
+  };
+
   btnDelClick = (e) => {
-    const car = this.state.cars.filter((c) => +c.id === +e.target.value)[0];
+    const car = getCar();
     //console.log("order out", orderOut);
     this.setState({
       showDeleteDialog: true,
@@ -99,7 +103,7 @@ export class Cars extends Component {
     axios
       .post(this.url, {
         btn_edit: '',
-        car_pk: this.state.cars.filter((c) => +c.id === +e.target.value)[0].id,
+        car_pk: this.getCar().id,
         url: window.location.pathname,
       })
       .then((res) => {
