@@ -2,10 +2,13 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Table, Button, Row, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import Loader from './Loader';
+import { OwnerDeleteDialog } from './OwnerDeleteDialog';
 
 export class Owners extends Component {
   state = {
     loading: false,
+    showDeleteDialog: false,
+    ownerDelete: '',
     owners: [],
     sortedBy: {
       name: 'last_name',
@@ -14,6 +17,7 @@ export class Owners extends Component {
   };
 
   url = '/testforjob/api/owners/';
+  tooltipPlace = 'bottom';
 
   //upArrow = '&#x0225C;';
   upArrow = '\u2191';
@@ -77,24 +81,23 @@ export class Owners extends Component {
     return this.state.sortedBy.direction === 'asc' ? this.upArrow : this.downArrow;
   }
 
+  getOwner = (id) => {
+    return this.state.owners.filter((o) => +o.id === +id)[0];
+  };
+
   btnDelClick = (e) => {
-    this.setState({ loading: true });
-    axios
-      .post(this.url, {
-        sorted_by: this.state.sortedBy,
-        btn_del: '',
-        owner_pk: this.state.owners[+e.target.value].id,
-      })
-      .then((res) => {
-        console.log('delBtnClick', res.data);
-        this.setState({ owners: res.data });
-      })
-      .catch((err) => console.log('delBtnClick', err.response.data))
-      .finally(() => this.setState({ loading: false }));
+    //console.log('btnDelClick', e);
+
+    const owner = this.getOwner(e.target.value);
+    console.log('btnDelClick', owner);
+    this.setState({
+      showDeleteDialog: true,
+      ownerDelete: owner,
+    });
   };
   btnEditClick = (e) => {
     axios
-      .post(this.url, { btn_edit: '', owner_pk: this.state.owners[+e.target.value].id })
+      .post(this.url, { btn_edit: '', owner_pk: e.target.value })
       .then((res) => {
         if (res.data.redirect) {
           window.location.href = res.data['redirect'];
@@ -113,16 +116,41 @@ export class Owners extends Component {
       .catch((err) => console.log('btnAddClick', err.response.data));
   };
 
+  ownerDelete = (confirm) => {
+    this.setState({ showDeleteDialog: false });
+    console.log('ownerDelete', confirm);
+
+    if (confirm === 'true') {
+      this.setState({ loading: true });
+      axios
+        .post(this.url, {
+          sorted_by: this.state.sortedBy,
+          btn_del: '',
+          owner_pk: this.state.ownerDelete.id,
+        })
+        .then((res) => {
+          console.log('delBtnClick', res.data);
+          this.setState({ owners: res.data });
+        })
+        .catch((err) => console.log('delBtnClick', err.response.data))
+        .finally(() => this.setState({ loading: false }));
+    }
+  };
+
   render() {
     return (
       <div>
         {this.state.loading && <Loader />}
+        {this.state.showDeleteDialog && (
+          <OwnerDeleteDialog params={this.state} ownerDelete={this.ownerDelete} />
+        )}
+
         <Table striped bordered hover>
           <thead>
             <tr>
               <OverlayTrigger
                 key={1}
-                placement={'bottom'}
+                placement={this.tooltipPlace}
                 overlay={<Tooltip id={`tooltip-1`}>Нажмите для сортировки</Tooltip>}
               >
                 <th id="last_name" onClick={this.btnSortClick}>
@@ -140,7 +168,7 @@ export class Owners extends Component {
               </OverlayTrigger>
               <OverlayTrigger
                 key={2}
-                placement={'bottom'}
+                placement={this.tooltipPlace}
                 overlay={<Tooltip id={`tooltip-2`}>Нажмите для сортировки</Tooltip>}
               >
                 <th id="name" onClick={this.btnSortClick}>
@@ -159,7 +187,7 @@ export class Owners extends Component {
               <th id="patronymic">Отчество</th>
               <OverlayTrigger
                 key={3}
-                placement={'bottom'}
+                placement={this.tooltipPlace}
                 overlay={<Tooltip id={`tooltip-3`}>Нажмите для сортировки</Tooltip>}
               >
                 <th id="gender" onClick={this.btnSortClick}>
@@ -177,7 +205,7 @@ export class Owners extends Component {
               </OverlayTrigger>
               <OverlayTrigger
                 key={4}
-                placement={'bottom'}
+                placement={this.tooltipPlace}
                 overlay={<Tooltip id={`tooltip-4`}>Нажмите для сортировки</Tooltip>}
               >
                 <th id="age" onClick={this.btnSortClick}>
@@ -209,11 +237,11 @@ export class Owners extends Component {
                     <Row>
                       <OverlayTrigger
                         key={5}
-                        placement={'bottom'}
+                        placement={this.tooltipPlace}
                         overlay={<Tooltip id={`tooltip-5`}>Редактирование</Tooltip>}
                       >
                         <Button
-                          value={index}
+                          value={o.id}
                           variant="primary"
                           className="ml-2"
                           onClick={this.btnEditClick}
@@ -223,11 +251,11 @@ export class Owners extends Component {
                       </OverlayTrigger>
                       <OverlayTrigger
                         key={6}
-                        placement={'bottom'}
+                        placement={this.tooltipPlace}
                         overlay={<Tooltip id={`tooltip-6`}>Удаление</Tooltip>}
                       >
                         <Button
-                          value={index}
+                          value={o.id}
                           variant="danger"
                           className="ml-2"
                           onClick={this.btnDelClick}
@@ -244,7 +272,7 @@ export class Owners extends Component {
         </Table>
         <OverlayTrigger
           key={7}
-          placement={'bottom'}
+          placement={this.tooltipPlace}
           overlay={<Tooltip id={`tooltip-7`}>Добавление нового автовладельца</Tooltip>}
         >
           <Button variant="primary" className="col" onClick={this.btnAddClick}>

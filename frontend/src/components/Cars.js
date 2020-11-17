@@ -17,6 +17,7 @@ export class Cars extends Component {
   };
 
   url = '/testforjob/api/cars/';
+  tooltipPlace = 'bottom';
 
   //upArrow = '&#x0225C;';
   upArrow = '\u2191';
@@ -31,16 +32,16 @@ export class Cars extends Component {
     if (prevProps.owner !== this.props.owner) this.getCars();
   }
 
-  getManufacturers = () => {
-    axios
-      .post('/testforjob/api/manufacturers/', {})
-      .then((res) => {
-        console.log('getManufacturers', res.data);
+  // getManufacturers = () => {
+  //   axios
+  //     .post('/testforjob/api/manufacturers/', {})
+  //     .then((res) => {
+  //       console.log('getManufacturers', res.data);
 
-        this.setState({ manufacturers: res.data });
-      })
-      .catch((err) => console.log('getManufacturers', err));
-  };
+  //       this.setState({ manufacturers: res.data });
+  //     })
+  //     .catch((err) => console.log('getManufacturers', err));
+  // };
 
   getCars = () => {
     console.log('getCars props.owner', this.props.owner);
@@ -87,12 +88,12 @@ export class Cars extends Component {
     return this.state.sortedBy.direction === 'asc' ? this.upArrow : this.downArrow;
   }
 
-  getCar = () => {
-    return this.state.cars.filter((c) => +c.id === +e.target.value)[0];
+  getCar = (id) => {
+    return this.state.cars.filter((c) => +c.id === +id)[0];
   };
 
   btnDelClick = (e) => {
-    const car = getCar();
+    const car = this.getCar(e.target.value);
     //console.log("order out", orderOut);
     this.setState({
       showDeleteDialog: true,
@@ -103,7 +104,7 @@ export class Cars extends Component {
     axios
       .post(this.url, {
         btn_edit: '',
-        car_pk: this.getCar().id,
+        car_pk: this.getCar(e.target.value).id,
         url: window.location.pathname,
       })
       .then((res) => {
@@ -157,7 +158,7 @@ export class Cars extends Component {
             <tr>
               <OverlayTrigger
                 key={1}
-                placement={'bottom'}
+                placement={this.tooltipPlace}
                 overlay={<Tooltip id={`tooltip-1`}>Нажмите для сортировки</Tooltip>}
               >
                 <th id="manufacturer" onClick={this.btnSortClick}>
@@ -175,7 +176,7 @@ export class Cars extends Component {
               </OverlayTrigger>
               <OverlayTrigger
                 key={2}
-                placement={'bottom'}
+                placement={this.tooltipPlace}
                 overlay={<Tooltip id={`tooltip-2`}>Нажмите для сортировки</Tooltip>}
               >
                 <th id="model" onClick={this.btnSortClick}>
@@ -193,7 +194,7 @@ export class Cars extends Component {
               </OverlayTrigger>
               <OverlayTrigger
                 key={3}
-                placement={'bottom'}
+                placement={this.tooltipPlace}
                 overlay={<Tooltip id={`tooltip-3`}>Нажмите для сортировки</Tooltip>}
               >
                 <th id="production" onClick={this.btnSortClick}>
@@ -211,7 +212,7 @@ export class Cars extends Component {
               </OverlayTrigger>
               <OverlayTrigger
                 key={4}
-                placement={'bottom'}
+                placement={this.tooltipPlace}
                 overlay={<Tooltip id={`tooltip-4`}>Нажмите для сортировки</Tooltip>}
               >
                 <th id="color" onClick={this.btnSortClick}>
@@ -229,7 +230,7 @@ export class Cars extends Component {
               </OverlayTrigger>
               <OverlayTrigger
                 key={5}
-                placement={'bottom'}
+                placement={this.tooltipPlace}
                 overlay={<Tooltip id={`tooltip-5`}>Нажмите для сортировки</Tooltip>}
               >
                 <th id="power" onClick={this.btnSortClick}>
@@ -247,7 +248,7 @@ export class Cars extends Component {
               </OverlayTrigger>
               <OverlayTrigger
                 key={6}
-                placement={'bottom'}
+                placement={this.tooltipPlace}
                 overlay={<Tooltip id={`tooltip-6`}>Нажмите для сортировки</Tooltip>}
               >
                 <th id="mileage" onClick={this.btnSortClick}>
@@ -280,7 +281,7 @@ export class Cars extends Component {
                     <Row>
                       <OverlayTrigger
                         key={7}
-                        placement={'bottom'}
+                        placement={this.tooltipPlace}
                         overlay={<Tooltip id={`tooltip-7`}>Редактировать</Tooltip>}
                       >
                         <Button
@@ -294,7 +295,7 @@ export class Cars extends Component {
                       </OverlayTrigger>
                       <OverlayTrigger
                         key={8}
-                        placement={'bottom'}
+                        placement={this.tooltipPlace}
                         overlay={<Tooltip id={`tooltip-8`}>Удалить</Tooltip>}
                       >
                         <Button
@@ -313,9 +314,6 @@ export class Cars extends Component {
             })}
           </tbody>
         </Table>
-        {/* <Button variant="primary" className="col" onClick={this.btnAddClick}>
-          +
-        </Button> */}
       </div>
     );
   }

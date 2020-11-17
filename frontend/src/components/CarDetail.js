@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Card, Row, Form, Button, Alert } from 'react-bootstrap';
+import { Card, Row, Form, Button, Alert, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import { registerLocale } from 'react-datepicker';
 //import 'react-day-picker/lib/style.css';
@@ -26,6 +26,7 @@ export class CarDetail extends Component {
   };
 
   url = '/testforjob/api/car/';
+  tooltipPlace = 'bottom';
 
   componentDidMount() {
     //registerLocale('ru', ru);
@@ -157,7 +158,13 @@ export class CarDetail extends Component {
                     value={this.state.car.model}
                     onChange={this.changeCar}
                   />
+
                   <Form.Label className="col-5">Дата выпуска</Form.Label>
+                  {/* <OverlayTrigger
+                    key={1}
+                    placement={this.tooltipPlace}
+                    overlay={<Tooltip id={`tooltip-1`}>Дата выпуска в формате dd.mm.yyy</Tooltip>}
+                  > */}
                   <DatePicker
                     className="col-11"
                     //format="dd.MM.yyyy"
@@ -167,13 +174,7 @@ export class CarDetail extends Component {
                     onChange={this.changeDate}
                     value={this.state.car.production}
                   />
-                  {/* <input
-                    className="form-control col-6"
-                    name="production"
-                    type="text"
-                    value={this.state.car.production}
-                    onChange={this.changeCar}
-                  /> */}
+                  {/* </OverlayTrigger> */}
                   <Form.Label className="col-5" name="color">
                     Цвет
                   </Form.Label>
@@ -224,9 +225,15 @@ export class CarDetail extends Component {
             <hr />
             <div className="row spacer">
               <div className="col-12">
-                <Button variant="primary" className="col" onClick={this.saveCar}>
-                  Сохранить
-                </Button>
+                <OverlayTrigger
+                  key={2}
+                  placement={this.tooltipPlace}
+                  overlay={<Tooltip id={`tooltip-2`}>Сохранить информацию об автомобиле</Tooltip>}
+                >
+                  <Button variant="primary" className="col" onClick={this.saveCar}>
+                    Сохранить
+                  </Button>
+                </OverlayTrigger>
               </div>
             </div>
           </Card.Body>

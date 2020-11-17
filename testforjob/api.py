@@ -49,6 +49,7 @@ class OwnerDetailView(APIView):
   def post(self, request, format=None):
     #print('OwnerDetailView', request.data)
     if request.data.get('btn_add', None) != None:
+      request.session['owner_pk'] = request.data.get('owner_pk', None)
       request.session['car_pk'] = -1
       request.session['back_from_car'] = request.data.get('url', None)
       return Response({ 'redirect': '/testforjob/car'})
@@ -61,7 +62,7 @@ class OwnerDetailView(APIView):
       owner = Owner()
     
     if (owner_data := request.data.get('owner', None)) != None: # save owner
-      #print('OwnerDetailView owner_data', owner_data)
+      print('OwnerDetailView owner_data', owner_data)
       ownerSer = OwnerSerializer(owner, data=owner_data)
       if ownerSer.is_valid(raise_exception=True):
         owner = ownerSer.save()
@@ -125,7 +126,8 @@ class CarDetailView(APIView):
     carSer = CarSerializer(car)
 
     if (car_data := request.data.get('car', None)) != None: # save car
-      #print('CarDetailView car_data', car_data)
+      print('CarDetailView car_data', car_data)
+      #owner_pk = request.session['owner_pk']
       carSer = CarSerializer(car, data=car_data)
       if carSer.is_valid(raise_exception=True):
         car = carSer.save()

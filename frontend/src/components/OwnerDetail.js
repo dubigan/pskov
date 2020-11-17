@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Card, Row, Form, Button, Alert, Col } from 'react-bootstrap';
+import { Card, Row, Form, Button, Alert, Col, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import { Cars } from './Cars';
 
 export class OwnerDetail extends Component {
@@ -11,7 +11,7 @@ export class OwnerDetail extends Component {
       messages: [],
     },
     owner: {
-      id: -1,
+      id: -10, // indicate new owner, -1 is not acceptable
       cars: [],
       name: '',
       patronymic: '',
@@ -23,6 +23,7 @@ export class OwnerDetail extends Component {
   };
 
   url = '/testforjob/api/owner/';
+  tooltipPlace = 'bottom';
 
   componentDidMount() {
     this.getOwner();
@@ -49,9 +50,11 @@ export class OwnerDetail extends Component {
     axios
       .post(this.url, {})
       .then((res) => {
-        console.log('getOwner', res.data);
+        //console.log('getOwner', res.data);
 
-        this.setState({ owner: res.data });
+        const owner = { ...res.data, id: res.data['id'] ? res.data['id'] : -10 };
+        console.log('getOwner', owner);
+        this.setState({ owner: owner });
       })
       .catch((err) => {
         console.log('getOwnerDetail getOwner', err.response.data);
@@ -126,7 +129,7 @@ export class OwnerDetail extends Component {
 
   btnNewCarClick = () => {
     axios
-      .post(this.url, { btn_add: '', url: window.location.pathname })
+      .post(this.url, { btn_add: '', url: window.location.pathname, owner_pk: this.state.owner.id })
       .then((res) => {
         if (res.data.redirect) {
           window.location.href = res.data['redirect'];
@@ -150,7 +153,7 @@ export class OwnerDetail extends Component {
                     className="form-control col-6"
                     name="name"
                     type="text"
-                    value={this.state.owner.name}
+                    value={this.state.owner.name ? this.state.owner.name : ''}
                     onChange={this.changeOwner}
                   />
                   <Form.Label className="col-4">Отчество</Form.Label>
@@ -158,7 +161,7 @@ export class OwnerDetail extends Component {
                     className="form-control col-6"
                     name="patronymic"
                     type="text"
-                    value={this.state.owner.patronymic}
+                    value={this.state.owner.patronymic ? this.state.owner.patronymic : ''}
                     onChange={this.changeOwner}
                   />
                   <Form.Label className="col-4">Фамилия</Form.Label>
@@ -166,7 +169,7 @@ export class OwnerDetail extends Component {
                     className="form-control col-6"
                     name="last_name"
                     type="text"
-                    value={this.state.owner.last_name}
+                    value={this.state.owner.last_name ? this.state.owner.last_name : ''}
                     onChange={this.changeOwner}
                   />
                   <Form.Label className="col-4" name="gender">
@@ -202,7 +205,7 @@ export class OwnerDetail extends Component {
                     name="age"
                     type="text"
                     maxLength="3"
-                    value={this.state.owner.age}
+                    value={this.state.owner.age ? this.state.owner.age : ''}
                     onChange={this.changeOwner}
                     onKeyPress={this.digitsOnly}
                   />
@@ -222,9 +225,17 @@ export class OwnerDetail extends Component {
             <hr />
             <div className="row spacer">
               <div className="col-12">
-                <Button variant="primary" className="col" onClick={this.saveOwner}>
-                  Сохранить
-                </Button>
+                <OverlayTrigger
+                  key={1}
+                  placement={this.tooltipPlace}
+                  overlay={
+                    <Tooltip id={`tooltip-1`}>Сохранить информацию об автовладельце</Tooltip>
+                  }
+                >
+                  <Button variant="primary" className="col" onClick={this.saveOwner}>
+                    Сохранить
+                  </Button>
+                </OverlayTrigger>
               </div>
             </div>
           </Card.Body>
@@ -234,14 +245,21 @@ export class OwnerDetail extends Component {
           <Card.Header>
             <Row className="spacer">
               <Col xs={12}>
-                <Button
-                  variant="primary"
-                  className="col"
-                  name="add_car"
-                  onClick={this.btnNewCarClick}
+                <OverlayTrigger
+                  key={2}
+                  placement={this.tooltipPlace}
+                  overlay={<Tooltip id={`tooltip-2`}>Добавить автомобиль</Tooltip>}
                 >
-                  Добавить автомобиль
-                </Button>
+                  <Button
+                    variant="primary"
+                    className="col"
+                    name="add_car"
+                    onClick={this.btnNewCarClick}
+                    disabled={this.state.owner.id < 0 ? 'disabled' : ''}
+                  >
+                    Добавить автомобиль
+                  </Button>
+                </OverlayTrigger>
               </Col>
             </Row>
           </Card.Header>
