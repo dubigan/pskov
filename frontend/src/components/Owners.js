@@ -1,10 +1,10 @@
 import React from 'react';
 import { Table, Button, Row, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import Loader from './Loader';
-import { ListOfItems } from './ListOfItems';
+import ListOfItems from './ListOfItems';
 import { OwnerDeleteDialog } from './OwnerDeleteDialog';
 
-export class Owners extends ListOfItems {
+export default class Owners extends ListOfItems {
   url = '/testforjob/api/owners/';
   tooltipPlace = 'bottom';
 

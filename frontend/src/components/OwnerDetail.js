@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Card, Row, Form, Button, Alert, Col, Tooltip, OverlayTrigger } from 'react-bootstrap';
-import { Cars } from './Cars';
+import Cars from './Cars';
 
 export class OwnerDetail extends Component {
   state = {

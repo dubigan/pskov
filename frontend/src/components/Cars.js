@@ -1,10 +1,10 @@
 import React from 'react';
 import { Table, Button, Row, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Loader from './Loader';
-import { ListOfItems } from './ListOfItems';
+import ListOfItems from './ListOfItems';
 import { CarDeleteDialog } from './CarDeleteDialog';
 
-export class Cars extends ListOfItems {
+export default class Cars extends ListOfItems {
   url = '/testforjob/api/cars/';
   tooltipPlace = 'bottom';
 

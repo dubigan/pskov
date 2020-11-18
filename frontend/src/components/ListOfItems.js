@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-export class ListOfItems extends Component {
+export default class ListOfItems extends Component {
   state = {
     loading: false,
     showDeleteDialog: false,
