@@ -1,16 +1,13 @@
 import React, { Component, Fragment, Suspense, lazy } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { OwnerDetail } from './components/OwnerDetail';
-import { CarDetail } from './components/CarDetail';
 import { Header } from './components/Header';
-import { Dashboard } from './components/Dashboard';
 
-const Owners = lazy(() => {
-  import('./components/Owners');
-});
-const Cars = lazy(() => {
-  import('./components/Cars');
-});
+const Owners = lazy(() => import('./components/Owners'));
+const Cars = lazy(() => import('./components/Cars'));
+const OwnerDetail = lazy(() => import('./components/OwnerDetail'));
+const CarDetail = lazy(() => import('./components/CarDetail'));
+const Dashboard = lazy(() => import('./components/Dashboard'));
+
 export default class App extends Component {
   render() {
     return (

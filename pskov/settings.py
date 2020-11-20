@@ -132,6 +132,13 @@ USE_TZ = True
 #     BASE_DIR / "static",
      #os.path.join(BASE_DIR, 'frontend/static'),
  #]
+ 
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    )
+}
+
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 #STATIC_ROOT = os.path.join(BASE_DIR, 'frontend/static')
 STATIC_URL = '/static/'

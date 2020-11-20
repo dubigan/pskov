@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Card, Row, Form, Button, Alert, Col, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import Cars from './Cars';
 
-export class OwnerDetail extends Component {
+export default class OwnerDetail extends Component {
   state = {
     alert: {
       showAlert: false,

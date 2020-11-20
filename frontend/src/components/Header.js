@@ -19,8 +19,11 @@ export class Header extends Component {
           <a className="navbar-brand" href="/testforjob/owners/">
             Автовладельцы
           </a>
-          <a className="navbar-brand" href="/testforjob/cars/">
+          <a className="navbar-brand col-md-4" href="/testforjob/cars/">
             Автомобили
+          </a>
+          <a className="navbar-brand col-md-4 offset-md-4" href="/testforjob/dashboard/">
+            Админ
           </a>
           <ul className="navbar-nav mr-auto mt-2 mt-lg-0"></ul>
           {/* <form className="form-inline my-2 my-lg-0">

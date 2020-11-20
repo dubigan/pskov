@@ -6,7 +6,7 @@ from .models import *
 from .serializers import *
 
 def getOwner(request):
-  owner_pk = request.data.get('owner_pk', None)
+  owner_pk = request.data.get('item_pk', None)
   return Owner.objects.get(pk=owner_pk)
 
 
@@ -77,6 +77,7 @@ class OwnerDetailView(APIView):
 def getCar(request):
   car_pk = request.data.get('item_pk', None)
   return Car.objects.get(pk=car_pk)
+
 class CarsListView(APIView):
 
   def get(self, request, format=None):
@@ -151,9 +152,11 @@ class Dashboard(APIView):
     return Response()
 
 
-@api_view(('POST',))
+@api_view(['POST', 'GET'])
 def downloadDB(request, format=None):
-  pass
+  owners = Owner.objects.all()
+  ownersSer = OwnerSerializer(owners, many=True)
+  return Response(ownersSer.data, headers={'content-disposition': 'attachment; filename="file.json"'} )
 
 
 @api_view(('POST',))

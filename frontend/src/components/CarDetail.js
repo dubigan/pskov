@@ -7,7 +7,7 @@ import { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ru } from 'date-fns/locale/ru/index.js';
 
-export class CarDetail extends Component {
+export default class CarDetail extends Component {
   state = {
     alert: {
       showAlert: false,
