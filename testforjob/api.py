@@ -1,7 +1,11 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, renderer_classes
 from django.core.paginator import Paginator
+from rest_framework.renderers import JSONRenderer
+from rest_framework_csv.renderers import CSVRenderer
+from django.utils.encoding import smart_text
+from rest_framework import renderers
 from .models import *
 from .serializers import *
 
@@ -152,20 +156,36 @@ class Dashboard(APIView):
     return Response()
 
 
-@api_view(['POST', 'GET'])
-def downloadDB(request, format=None):
+@api_view(['POST',])
+@renderer_classes((CSVRenderer,))
+def download_csv(request, format=None):
+  owners = Owner.objects.all()
+  ownersSer = OwnerSerializer(owners, many=True) 
+  return Response(ownersSer.data, headers={'content-disposition': 'attachment; filename="file.csv"'} )
+
+@api_view(['POST',])
+@renderer_classes((JSONRenderer,))
+def download_json(request, format=None):
   owners = Owner.objects.all()
   ownersSer = OwnerSerializer(owners, many=True)
   return Response(ownersSer.data, headers={'content-disposition': 'attachment; filename="file.json"'} )
 
+class PlainTextRenderer(renderers.BaseRenderer):
+    media_type = 'text/plain'
+    format = 'txt'
+
+    def render(self, data, media_type=None, renderer_context=None):
+      print('PlainTextRenderer', data)
+      return smart_text(data, encoding=self.charset)
+
+@api_view(['POST',])
+@renderer_classes((PlainTextRenderer,))
+def download_text(request, format=None):
+  owners = Owner.objects.all()
+  ownersSer = OwnerSerializer(owners, many=True)
+  return Response(ownersSer.data, headers={'content-disposition': 'attachment; filename="file.txt"'} )
 
 @api_view(('POST',))
 def uploadDB(request, format=None):
   pass
 
-
-@api_view(('POST',))
-def get_manufacturers(request, format=None):
-  manuf = Manufacturer.objects.all()
-  manufSer = ManufacturerSerializer(manuf, many=True)
-  return Response(manufSer.data)

@@ -7,7 +7,8 @@ urlpatterns = [
   path('api/owner/', OwnerDetailView.as_view(), name='owner-detail'),
   path('api/cars/', CarsListView.as_view(), name='cars-list'),
   path('api/car/', CarDetailView.as_view(), name='car-detail'),
-  path('api/download/', downloadDB, name='download-db'),
+  path('api/download_json/', download_json, name='download-db-json'),
+  path('api/download_csv/', download_csv, name='download-db-csv'),
+  path('api/download_text/', download_text, name='download-db-text'),
   path('api/upload/', uploadDB, name='upload-db'),
-  path('api/manufacturers/', get_manufacturers, name='get-manufacturers')
 ]
