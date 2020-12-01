@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'testforjob.apps.TestforjobConfig',
-    'frontend.apps.FrontendConfig'
+    'frontend.apps.FrontendConfig',
+    'channels'
 ]
 
 MIDDLEWARE = [
@@ -142,3 +143,14 @@ REST_FRAMEWORK = {
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 #STATIC_ROOT = os.path.join(BASE_DIR, 'frontend/static')
 STATIC_URL = '/static/'
+
+ASGI_APPLICATION = "pskov.asgi.application"
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        # 'CONFIG': {
+        #     "hosts": [CHANNEL_REDIS_HOST],
+        #     "symmetric_encryption_keys": [SECRET_KEY],
+        # },
+    },
+}
