@@ -65,7 +65,7 @@ var Dashboard = /*#__PURE__*/function (_Component) {
     return _possibleConstructorReturn(_this, (_temp = _this = _super.call.apply(_super, [this].concat(args)), _this.state = {
       uploadFileName: '',
       downloadFormat: 'json'
-    }, _this.downloadUrl = '/testforjob/api/download/', _this.getDownloadUrl = function () {
+    }, _this.downloadUrl = '/testforjob/api/download/', _this.uploadUrl = '/testforjob/ws/upload/', _this.getDownloadUrl = function () {
       return '/testforjob/api/download_' + _this.state.downloadFormat + '/';
     }, _this.change = function (e) {}, _this.selectFormat = function (e) {
       //console.log('selectFormat', e.target.value);
@@ -97,7 +97,7 @@ var Dashboard = /*#__PURE__*/function (_Component) {
         variant: "primary",
         className: "col-1 ml-4",
         onClick: this.selectFile,
-        disabled: this.state.downloadFileName === '' ? 'disabled' : ''
+        disabled: this.state.uploadFileName === '' ? 'disabled' : ''
       }, "\u0421\u0442\u0430\u0440\u0442")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__.default.Header, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__.default.Label, {
         className: "col-5"
       }, "\u0412\u044B\u0433\u0440\u0443\u0437\u043A\u0430 BD")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__.default.Label, {
