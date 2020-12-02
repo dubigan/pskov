@@ -17,10 +17,11 @@ export default class Dashboard extends Component {
 
   componentDidMount() {
     const ws_scheme = window.location.protocol === 'https:' ? 'wss' : 'ws';
-    const ws = new WebSocket(`${ws_scheme}://${window.location.host}${this.uploadUrl}`);
+    const url = `${ws_scheme}://${window.location.host}${this.uploadUrl}`;
+    const ws = new WebSocket(url);
     ws.onopen = () => {
       // on connecting, do nothing but log it to the console
-      console.log('connected');
+      console.log(`connected to ${url}`);
     };
 
     ws.onmessage = (evt) => {
