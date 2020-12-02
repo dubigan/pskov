@@ -9,39 +9,36 @@ export default class Dashboard extends Component {
   };
 
   downloadUrl = '/testforjob/api/download/';
-  uploadUrl = 'ws://localhost:8000/testforjob/ws/upload/'
+  uploadUrl = 'ws://localhost:8000/testforjob/ws/upload/';
 
   getDownloadUrl = () => {
     return `/testforjob/api/download_${this.state.downloadFormat}/`;
   };
-  
 
   componentDidMount() {
-    const ws = new WebSocket(this.uploadUrl)
+    const ws = new WebSocket(this.uploadUrl);
     ws.onopen = () => {
-        // on connecting, do nothing but log it to the console
-        console.log('connected')
-    }
+      // on connecting, do nothing but log it to the console
+      console.log('connected');
+    };
 
-    ws.onmessage = evt => {
-        // listen to data sent from the websocket server
-        const message = JSON.parse(evt.data)
-        //this.setState({dataFromServer: message})
-        console.log(message)
-    }
+    ws.onmessage = (evt) => {
+      // listen to data sent from the websocket server
+      const message = JSON.parse(evt.data);
+      //this.setState({dataFromServer: message})
+      console.log(message);
+    };
 
     ws.onclose = () => {
-        console.log('disconnected')
-        // automatically try to reconnect on connection loss
-
-    }
+      console.log('disconnected');
+      // automatically try to reconnect on connection loss
+    };
 
     ws.onerror = () => {
-      console.log('websocket error')
-    }
+      console.log('websocket error');
+    };
     //console.log('Dashboard componentDidMount', ws)
-    this.setState({websocket: ws})
-
+    this.setState({ websocket: ws });
   }
 
   change = (e) => {};
@@ -82,8 +79,14 @@ export default class Dashboard extends Component {
             <Form.Label className="col-5">Выгрузка BD</Form.Label>
           </Card.Header>
           <Row>
-            <Form.Label className="col-3 ml-4">Выберите формат сохраняемого файла</Form.Label>
-            <Form.Control as="select" className="col-2" onChange={this.selectFormat}>
+            <Form.Label className="col-3 ml-4">
+              Выберите формат сохраняемого файла
+            </Form.Label>
+            <Form.Control
+              as="select"
+              className="col-2"
+              onChange={this.selectFormat}
+            >
               <option value="json">json</option>
               <option value="csv">csv</option>
               <option value="text">text/plain</option>
