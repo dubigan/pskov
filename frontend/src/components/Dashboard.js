@@ -9,14 +9,15 @@ export default class Dashboard extends Component {
   };
 
   downloadUrl = '/testforjob/api/download/';
-  uploadUrl = 'ws://localhost:8000/testforjob/ws/upload/';
+  uploadUrl = '/testforjob/ws/upload/';
 
   getDownloadUrl = () => {
     return `/testforjob/api/download_${this.state.downloadFormat}/`;
   };
 
   componentDidMount() {
-    const ws = new WebSocket(this.uploadUrl);
+    const ws_scheme = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    const ws = new WebSocket(`${ws_scheme}://${window.location.host}${this.uploadUrl}`);
     ws.onopen = () => {
       // on connecting, do nothing but log it to the console
       console.log('connected');
@@ -79,14 +80,8 @@ export default class Dashboard extends Component {
             <Form.Label className="col-5">Выгрузка BD</Form.Label>
           </Card.Header>
           <Row>
-            <Form.Label className="col-3 ml-4">
-              Выберите формат сохраняемого файла
-            </Form.Label>
-            <Form.Control
-              as="select"
-              className="col-2"
-              onChange={this.selectFormat}
-            >
+            <Form.Label className="col-3 ml-4">Выберите формат сохраняемого файла</Form.Label>
+            <Form.Control as="select" className="col-2" onChange={this.selectFormat}>
               <option value="json">json</option>
               <option value="csv">csv</option>
               <option value="text">text/plain</option>
