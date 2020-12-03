@@ -10,9 +10,9 @@ class UploadConsumer(WebsocketConsumer):
         print('UploadConsumer disconnect', close_code)
 
     def receive(self, text_data):
-        text_data_json = json.loads(text_data)
-        message = text_data_json['message']
-        print('UploadConsumer', message)
+        # text_data_json = json.loads(text_data)
+        # message = text_data_json['message']
+        print('UploadConsumer', repr(text_data))
 
         # self.send(text_data=json.dumps({
         #     'message': message
