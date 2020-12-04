@@ -18,16 +18,28 @@ export default class Dashboard extends Component {
     return `/testforjob/api/download_${this.state.downloadFormat}/`;
   };
 
+  setWebsocketStatus = (status) => {
+    const websocket = { ...this.state.websocket, status: status };
+    console.log('setWebsocketStatus', websocket);
+    this.setState({ websocket });
+  };
+
+  checkWebsocket = () => {
+    const ws = this.state.websocket.ws;
+    if (!ws || ws.readyState === WebSocket.CLOSED) this.connectWebsocket(); //check if websocket instance is closed, if so call `connect` function.
+  };
+
   connectWebsocket = () => {
+    const that = this; // cache the this
+    let connectInterval;
     const ws_scheme = window.location.protocol === 'https:' ? 'wss' : 'ws';
     const url = `${ws_scheme}://${window.location.host}${this.uploadUrl}`;
     const ws = new WebSocket(url);
     ws.onopen = () => {
-      // on connecting, do nothing but log it to the console
+      that.timeout = 250; // reset timer to 250 on open of websocket connection
+      clearTimeout(connectInterval);
       console.log(`connected to ${url}`);
-      const websocket = { ...this.state.websocket, status: `connected to ${url}` };
-      console.log('onopen', websocket);
-      this.setState({ websocket });
+      this.setWebsocketStatus(`connected to ${url}`);
     };
 
     ws.onmessage = (evt) => {
@@ -39,13 +51,15 @@ export default class Dashboard extends Component {
 
     ws.onclose = () => {
       console.log('disconnected');
-      this.setState({ ...this.state.websocket, status: 'disconnected' });
+      this.setWebsocketStatus('disconnected');
       // automatically try to reconnect on connection loss
+      that.timeout = that.timeout + that.timeout; //increment retry interval
+      connectInterval = setTimeout(this.checkWebsocket, Math.min(10000, that.timeout)); //call check function after timeout
     };
 
     ws.onerror = (e) => {
       console.log('websocket error', e);
-      this.setSate({ ...this.state.websocket, status: `websocket error: ${e}` });
+      this.setWebsocketStatus(`websocket error: ${e}`);
     };
     //console.log('Dashboard componentDidMount', ws);
     const websocket = { ...this.state.websocket, ws: ws };
@@ -90,30 +104,36 @@ export default class Dashboard extends Component {
   render() {
     return (
       <div>
-        <div className="col-12">Websocket status: {this.state.websocket.status}</div>
-        <Form.Label className="col-5">Файл загрузки в BD</Form.Label>
-        <Row md="auto">
-          <input
-            className="form-control col-6 ml-4"
-            name="uploadFileName"
-            id="uploadFileName"
-            type="text"
-            value={this.state.uploadFile ? this.state.uploadFile.name : ''}
-            //onChange={this.change}
-            readOnly
-          />
-          <Button variant="primary" className="" onClick={this.selectFileToUpload}>
-            ...
-          </Button>
-          <Button
-            variant="primary"
-            className="col-1 ml-4"
-            onClick={this.sendFile}
-            disabled={this.state.uploadFile ? '' : 'disabled'}
-          >
-            Старт
-          </Button>
-        </Row>
+        <Card>
+          <Card.Header>
+            <Form.Label className="col-5">Загрузка в BD</Form.Label>
+          </Card.Header>
+
+          <div className="col-12">Websocket status: {this.state.websocket.status}</div>
+          <Form.Label className="col-5">Файл загрузки в BD</Form.Label>
+          <Row md="auto">
+            <input
+              className="form-control col-6 ml-4"
+              name="uploadFileName"
+              id="uploadFileName"
+              type="text"
+              value={this.state.uploadFile ? this.state.uploadFile.name : ''}
+              //onChange={this.change}
+              readOnly
+            />
+            <Button variant="primary" className="" onClick={this.selectFileToUpload}>
+              ...
+            </Button>
+            <Button
+              variant="primary"
+              className="col-1 ml-4"
+              onClick={this.sendFile}
+              disabled={this.state.uploadFile ? '' : 'disabled'}
+            >
+              Старт
+            </Button>
+          </Row>
+        </Card>
         <hr />
         <Card>
           <Card.Header>

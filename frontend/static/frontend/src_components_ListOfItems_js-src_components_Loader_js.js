@@ -75,13 +75,14 @@ var ListOfItems = /*#__PURE__*/function (_Component) {
     }, _this.url = '', _this.upArrow = "\u2191", _this.downArrow = "\u2193", _this.getItems = function () {
       _this.setState({
         loading: true
-      });
+      }); //console.log('getItems props.owner', this.props.owner);
+
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().post(_this.url, {
-        sorted_by: _this.state.sortedBy
+        sorted_by: _this.state.sortedBy,
+        owner: _this.props.owner ? _this.props.owner : -1
       }).then(function (res) {
-        console.log('getItems', res.data);
-
+        //console.log('getItems', res.data);
         _this.setState({
           items: res.data
         });
@@ -272,7 +273,6 @@ ___CSS_LOADER_EXPORT___.push([module.id, "/* body,\nhtml {\n    height: 100%;\n 
   \***********************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__, module.id */
-/*! CommonJS bailout: module.exports is used directly at 19:0-14 */
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 var api = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");

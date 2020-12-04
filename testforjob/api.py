@@ -75,6 +75,7 @@ class OwnerDetailView(APIView):
         owner = ownerSer.save()
     
     ownerSer = OwnerSerializer(owner)
+    #print('OwnerDetailView', ownerSer.data)
     return Response(ownerSer.data)
 
 
@@ -99,10 +100,10 @@ class CarsListView(APIView):
       return Response({ 'redirect': '/testforjob/car'})
 
     cars = None
-    if (owner_id := request.data.get('owner_pk', -1)) != -1:
-      #print('CarsListView owner_id', owner_id)
+    if (owner_pk := request.data.get('owner', -1)) != -1:
+      print('CarsListView owner_pk', owner_pk)
       try:
-        cars = Car.objects.filter(owner = owner_id)
+        cars = Car.objects.filter(owner = owner_pk)
       except Exception as e:
         print('CarsListView', e) 
         cars = Car.objects.none()
@@ -112,7 +113,7 @@ class CarsListView(APIView):
 
     if (sortedBy := request.data.get('sorted_by', None)) != None:
       #print('owners post sortedBy', sortedBy)
-      cars = Car.objects.all()
+      #cars = Car.objects.all()
       name = sortedBy['name']
       if len(name) > 0:
         direction = '-' if sortedBy['direction'] == 'desc' else ''
@@ -168,6 +169,14 @@ def download_csv(request, format=None):
 def download_json(request, format=None):
   owners = Owner.objects.all()
   ownersSer = OwnerSerializer(owners, many=True)
+  for o in ownersSer.data:
+    #print('download_json', o)
+    try:
+      #o.pop('id')
+      for car in o['cars']:
+        print('download_json', car)
+        car.pop('owner')
+    except: pass
   return Response(ownersSer.data, headers={'content-disposition': 'attachment; filename="file.json"'} )
 
 class PlainTextRenderer(renderers.BaseRenderer):

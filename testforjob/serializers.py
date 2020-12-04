@@ -2,16 +2,15 @@ from rest_framework import serializers
 from datetime import date, datetime
 from .models import *
 
-class ManufacturerSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = Manufacturer
-    fields = '__all__'
-
-
 class CarSerializer(serializers.ModelSerializer):
   class Meta:
     model = Car
-    fields = '__all__'
+    #fields = '__all__'
+    exclude = ('owner',)
+
+  def validate_owner(self, data):
+    print('validate_owner')
+    return data
 
   def validate_manufacturer(self, data):
     if data == None or len(data) == 0: 
@@ -75,6 +74,10 @@ class OwnerSerializer(serializers.ModelSerializer):
     model = Owner
     fields = '__all__'
 
+  def validate_cars(self, data):
+    print('validate_cars')
+    return data
+
   def validate_name(self, data):
     if data == None or len(data) == 0: 
       raise serializers.ValidationError("Поле Имя не может быть пустым")
@@ -115,6 +118,7 @@ class OwnerSerializer(serializers.ModelSerializer):
     Car.objects.filter(owner=instance).delete()
     if cars != None:
       for car in cars:
-        car.pop('owner')
+        try: car.pop('owner')
+        except: pass
         Car.objects.create(owner=instance, **car)
     return instance

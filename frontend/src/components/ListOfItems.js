@@ -39,10 +39,14 @@ export default class ListOfItems extends Component {
 
   getItems = () => {
     this.setState({ loading: true });
+    //console.log('getItems props.owner', this.props.owner);
     axios
-      .post(this.url, { sorted_by: this.state.sortedBy })
+      .post(this.url, {
+        sorted_by: this.state.sortedBy,
+        owner: this.props.owner ? this.props.owner : -1,
+      })
       .then((res) => {
-        console.log('getItems', res.data);
+        //console.log('getItems', res.data);
         this.setState({ items: res.data });
       })
       .catch((err) => console.log('getItems', err.response.data))
