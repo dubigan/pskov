@@ -4,6 +4,7 @@ import { Form, Button, Row, Card } from 'react-bootstrap';
 export default class Dashboard extends Component {
   state = {
     uploadFile: null,
+    clearDB: false,
     websocket: {
       ws: null,
       status: 'disconnected',
@@ -38,19 +39,20 @@ export default class Dashboard extends Component {
     ws.onopen = () => {
       that.timeout = 250; // reset timer to 250 on open of websocket connection
       clearTimeout(connectInterval);
-      console.log(`connected to ${url}`);
+      //console.log(`connected to ${url}`);
       this.setWebsocketStatus(`connected to ${url}`);
     };
 
     ws.onmessage = (evt) => {
       // listen to data sent from the websocket server
-      const message = JSON.parse(evt.data);
+      const message = JSON.parse(evt.data)['message'];
       //this.setState({dataFromServer: message})
       console.log(message);
+      this.setWebsocketStatus(message);
     };
 
     ws.onclose = () => {
-      console.log('disconnected');
+      //console.log('disconnected');
       this.setWebsocketStatus('disconnected');
       // automatically try to reconnect on connection loss
       that.timeout = that.timeout + that.timeout; //increment retry interval
@@ -96,9 +98,17 @@ export default class Dashboard extends Component {
     // here we tell the reader what to do when it's done reading...
     reader.onload = (readerEvent) => {
       const content = readerEvent.target.result; // this is the content!
-      console.log(content);
-      this.state.websocket.ws.send(content);
+      //console.log(content);
+      this.state.websocket.ws.send(
+        JSON.stringify({ cleardb: this.state.clearDB, content: content })
+      );
     };
+  };
+
+  clearDB = () => {
+    const clearDB = !this.state.clearDB;
+    //console.log('clearDB', clearDB);
+    this.setState({ clearDB });
   };
 
   render() {
@@ -106,52 +116,66 @@ export default class Dashboard extends Component {
       <div>
         <Card>
           <Card.Header>
-            <Form.Label className="col-5">Загрузка в BD</Form.Label>
+            <Form.Label className="col-5">Загрузка в DB</Form.Label>
+            <div className="col-12 text-left">Websocket status: {this.state.websocket.status}</div>
           </Card.Header>
-
-          <div className="col-12">Websocket status: {this.state.websocket.status}</div>
-          <Form.Label className="col-5">Файл загрузки в BD</Form.Label>
-          <Row md="auto">
-            <input
-              className="form-control col-6 ml-4"
-              name="uploadFileName"
-              id="uploadFileName"
-              type="text"
-              value={this.state.uploadFile ? this.state.uploadFile.name : ''}
-              //onChange={this.change}
-              readOnly
-            />
-            <Button variant="primary" className="" onClick={this.selectFileToUpload}>
-              ...
-            </Button>
-            <Button
-              variant="primary"
-              className="col-1 ml-4"
-              onClick={this.sendFile}
-              disabled={this.state.uploadFile ? '' : 'disabled'}
-            >
-              Старт
-            </Button>
-          </Row>
+          <Card.Body>
+            <Row>
+              <Form.Label className="col-2 text-left">Очистить DB</Form.Label>
+              <Form.Check
+                name="clearBD"
+                value={this.state.clearDB}
+                onChange={this.clearDB}
+                className="ml-2"
+              />
+            </Row>
+            <Row>
+              <Form.Label className="col-2 text-left">Файл загрузки в DB</Form.Label>
+              <input
+                className="form-control col-3"
+                name="uploadFileName"
+                id="uploadFileName"
+                type="text"
+                value={this.state.uploadFile ? this.state.uploadFile.name : ''}
+                //onChange={this.change}
+                readOnly
+              />
+              <Button variant="primary" className="" onClick={this.selectFileToUpload}>
+                ...
+              </Button>
+              <Button
+                variant="primary"
+                className="col-1 ml-2"
+                onClick={this.sendFile}
+                disabled={this.state.uploadFile ? '' : 'disabled'}
+              >
+                Старт
+              </Button>
+            </Row>
+          </Card.Body>
         </Card>
         <hr />
         <Card>
           <Card.Header>
-            <Form.Label className="col-5">Выгрузка BD</Form.Label>
+            <Form.Label className="col-5">Выгрузка DB</Form.Label>
           </Card.Header>
-          <Row>
-            <Form.Label className="col-3 ml-4">Выберите формат сохраняемого файла</Form.Label>
-            <Form.Control as="select" className="col-2" onChange={this.selectFormat}>
-              <option value="json">json</option>
-              <option value="csv">csv</option>
-              <option value="text">text/plain</option>
-            </Form.Control>
-            <form action={this.getDownloadUrl()} method="post">
-              <Button variant="primary" type="submit" className="col ml-4">
-                Старт
-              </Button>
-            </form>
-          </Row>
+          <Card.Body>
+            <Row>
+              <Form.Label className="col-3 text-left">
+                Выберите формат сохраняемого файла
+              </Form.Label>
+              <Form.Control as="select" className="col-2" onChange={this.selectFormat}>
+                <option value="json">json</option>
+                <option value="csv">csv</option>
+                <option value="text">text/plain</option>
+              </Form.Control>
+              <form action={this.getDownloadUrl()} method="post">
+                <Button variant="primary" type="submit" className="col ml-4">
+                  Старт
+                </Button>
+              </form>
+            </Row>
+          </Card.Body>
         </Card>
       </div>
     );

@@ -74,8 +74,8 @@ class OwnerSerializer(serializers.ModelSerializer):
     model = Owner
     fields = '__all__'
 
-  def validate_cars(self, data):
-    print('validate_cars')
+  def validate_cars(self, data): # OK 
+    #print('validate_cars')
     return data
 
   def validate_name(self, data):

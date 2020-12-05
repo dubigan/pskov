@@ -67,6 +67,7 @@ var Dashboard = /*#__PURE__*/function (_Component) {
 
     return _possibleConstructorReturn(_this, (_temp = _this = _super.call.apply(_super, [this].concat(args)), _this.state = {
       uploadFile: null,
+      clearDB: false,
       websocket: {
         ws: null,
         status: 'disconnected'
@@ -99,22 +100,22 @@ var Dashboard = /*#__PURE__*/function (_Component) {
       ws.onopen = function () {
         that.timeout = 250; // reset timer to 250 on open of websocket connection
 
-        clearTimeout(connectInterval);
-        console.log("connected to ".concat(url));
+        clearTimeout(connectInterval); //console.log(`connected to ${url}`);
 
         _this.setWebsocketStatus("connected to ".concat(url));
       };
 
       ws.onmessage = function (evt) {
         // listen to data sent from the websocket server
-        var message = JSON.parse(evt.data); //this.setState({dataFromServer: message})
+        var message = JSON.parse(evt.data)['message']; //this.setState({dataFromServer: message})
 
         console.log(message);
+
+        _this.setWebsocketStatus(message);
       };
 
       ws.onclose = function () {
-        console.log('disconnected');
-
+        //console.log('disconnected');
         _this.setWebsocketStatus('disconnected'); // automatically try to reconnect on connection loss
 
 
@@ -162,11 +163,19 @@ var Dashboard = /*#__PURE__*/function (_Component) {
 
       reader.onload = function (readerEvent) {
         var content = readerEvent.target.result; // this is the content!
+        //console.log(content);
 
-        console.log(content);
-
-        _this.state.websocket.ws.send(content);
+        _this.state.websocket.ws.send(JSON.stringify({
+          cleardb: _this.state.clearDB,
+          content: content
+        }));
       };
+    }, _this.clearDB = function () {
+      var clearDB = !_this.state.clearDB; //console.log('clearDB', clearDB);
+
+      _this.setState({
+        clearDB: clearDB
+      });
     }, _temp));
   }
 
@@ -180,14 +189,19 @@ var Dashboard = /*#__PURE__*/function (_Component) {
     value: function render() {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__.default.Header, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__.default.Label, {
         className: "col-5"
-      }, "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430 \u0432 BD")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-        className: "col-12"
-      }, "Websocket status: ", this.state.websocket.status), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__.default.Label, {
-        className: "col-5"
-      }, "\u0424\u0430\u0439\u043B \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0438 \u0432 BD"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__.default, {
-        md: "auto"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
-        className: "form-control col-6 ml-4",
+      }, "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430 \u0432 DB"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+        className: "col-12 text-left"
+      }, "Websocket status: ", this.state.websocket.status)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__.default.Body, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__.default.Label, {
+        className: "col-2 text-left"
+      }, "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C DB"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__.default.Check, {
+        name: "clearBD",
+        value: this.state.clearDB,
+        onChange: this.clearDB,
+        className: "ml-2"
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__.default.Label, {
+        className: "col-2 text-left"
+      }, "\u0424\u0430\u0439\u043B \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0438 \u0432 DB"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
+        className: "form-control col-3",
         name: "uploadFileName",
         id: "uploadFileName",
         type: "text",
@@ -200,13 +214,13 @@ var Dashboard = /*#__PURE__*/function (_Component) {
         onClick: this.selectFileToUpload
       }, "..."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__.default, {
         variant: "primary",
-        className: "col-1 ml-4",
+        className: "col-1 ml-2",
         onClick: this.sendFile,
         disabled: this.state.uploadFile ? '' : 'disabled'
-      }, "\u0421\u0442\u0430\u0440\u0442"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__.default.Header, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__.default.Label, {
+      }, "\u0421\u0442\u0430\u0440\u0442")))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("hr", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__.default.Header, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__.default.Label, {
         className: "col-5"
-      }, "\u0412\u044B\u0433\u0440\u0443\u0437\u043A\u0430 BD")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__.default.Label, {
-        className: "col-3 ml-4"
+      }, "\u0412\u044B\u0433\u0440\u0443\u0437\u043A\u0430 DB")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__.default.Body, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__.default.Label, {
+        className: "col-3 text-left"
       }, "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0444\u043E\u0440\u043C\u0430\u0442 \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u0435\u043C\u043E\u0433\u043E \u0444\u0430\u0439\u043B\u0430"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__.default.Control, {
         as: "select",
         className: "col-2",
@@ -224,7 +238,7 @@ var Dashboard = /*#__PURE__*/function (_Component) {
         variant: "primary",
         type: "submit",
         className: "col ml-4"
-      }, "\u0421\u0442\u0430\u0440\u0442")))));
+      }, "\u0421\u0442\u0430\u0440\u0442"))))));
     }
   }]);
 

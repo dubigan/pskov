@@ -273,6 +273,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, "/* body,\nhtml {\n    height: 100%;\n 
   \***********************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__, module.id */
+/*! CommonJS bailout: module.exports is used directly at 19:0-14 */
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 var api = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
