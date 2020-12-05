@@ -13,15 +13,15 @@ class UploadConsumer(WebsocketConsumer):
       pass
 
     def receive(self, text_data):
-      text_data_json = json.loads(text_data)
-      #print('UploadConsumer', text_data_json)
-      #print('UploadConsumer clearDB', clearDB)     
-      #print('UploadConsumer content', content)
-      self.send(text_data=json.dumps({
-          'message': 'data is loaded'
-      }))
-
       try:
+        text_data_json = json.loads(text_data)
+        #print('UploadConsumer', text_data_json)
+        #print('UploadConsumer clearDB', clearDB)     
+        #print('UploadConsumer content', content)
+        self.send(text_data=json.dumps({
+            'message': 'success: Успешная загрузка файла'
+        }))
+
         clearDB = text_data_json.get('cleardb', False)
         content = text_data_json.get('content', [])
         content_json = json.loads(content)
@@ -29,6 +29,9 @@ class UploadConsumer(WebsocketConsumer):
         if clearDB:
           Owner.objects.all().delete()
           Car.objects.all().delete()
+          self.send(text_data=json.dumps({
+              'message': 'success: Очистка DB завершена'
+          }))
 
         for o in content_json:
           owner = Owner()
@@ -37,9 +40,9 @@ class UploadConsumer(WebsocketConsumer):
           if ownerSer.is_valid(raise_exception=True):
             owner = ownerSer.save()
 
-        self.send(text_data=json.dumps({'message': 'success load data to DB'}))
+        self.send(text_data=json.dumps({'message': 'success: Данные загружены в DB'}))
       except:
         self.send(text_data=json.dumps({
-          'message': 'error load data to DB'
+          'message': 'error: Ошибка загрузки данных в DB. Используйте формат данных JSON'
       }))
 

@@ -1,19 +1,47 @@
-import React, { Component } from 'react';
-import { Form, Button, Row, Card } from 'react-bootstrap';
+import React, { Component } from "react";
+import { Form, Button, Row, Card, Alert } from "react-bootstrap";
 
 export default class Dashboard extends Component {
   state = {
+    alert: {
+      showAlert: false,
+      errors: [],
+      messages: [],
+    },
     uploadFile: null,
     clearDB: false,
     websocket: {
       ws: null,
-      status: 'disconnected',
+      status: "disconnected",
     },
-    downloadFormat: 'json',
+    downloadFormat: "json",
   };
 
-  downloadUrl = '/testforjob/api/download/';
-  uploadUrl = '/testforjob/ws/upload/';
+  downloadUrl = "/testforjob/api/download/";
+  uploadUrl = "/testforjob/ws/upload/";
+
+  showAlert = () => {
+    if (this.state.alert.showAlert) {
+      setTimeout(
+        () =>
+          this.setState({
+            alert: { messages: [], errors: [], showAlert: false },
+          }),
+        5000
+      );
+      if (this.state.alert.errors.length > 0)
+        return (
+          <Alert variant="danger">{this.state.alert.errors.join(". ")}</Alert>
+        );
+      if (this.state.alert.messages.length > 0)
+        return (
+          <Alert variant="primary">
+            {this.state.alert.messages.join(". ")}
+          </Alert>
+        );
+    }
+    return <div />;
+  };
 
   getDownloadUrl = () => {
     return `/testforjob/api/download_${this.state.downloadFormat}/`;
@@ -21,7 +49,7 @@ export default class Dashboard extends Component {
 
   setWebsocketStatus = (status) => {
     const websocket = { ...this.state.websocket, status: status };
-    console.log('setWebsocketStatus', websocket);
+    console.log("setWebsocketStatus", websocket);
     this.setState({ websocket });
   };
 
@@ -33,7 +61,7 @@ export default class Dashboard extends Component {
   connectWebsocket = () => {
     const that = this; // cache the this
     let connectInterval;
-    const ws_scheme = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
     const url = `${ws_scheme}://${window.location.host}${this.uploadUrl}`;
     const ws = new WebSocket(url);
     ws.onopen = () => {
@@ -45,22 +73,31 @@ export default class Dashboard extends Component {
 
     ws.onmessage = (evt) => {
       // listen to data sent from the websocket server
-      const message = JSON.parse(evt.data)['message'];
-      //this.setState({dataFromServer: message})
-      console.log(message);
-      this.setWebsocketStatus(message);
+      const message = JSON.parse(evt.data)["message"];
+      //console.log(message);
+      //this.setWebsocketStatus(message);
+      this.setState({
+        alert: {
+          messages: message.startsWith("success") ? [message] : [],
+          errors: message.startsWith("error") ? [message] : [],
+          showAlert: true,
+        },
+      });
     };
 
     ws.onclose = () => {
       //console.log('disconnected');
-      this.setWebsocketStatus('disconnected');
+      this.setWebsocketStatus("disconnected");
       // automatically try to reconnect on connection loss
       that.timeout = that.timeout + that.timeout; //increment retry interval
-      connectInterval = setTimeout(this.checkWebsocket, Math.min(10000, that.timeout)); //call check function after timeout
+      connectInterval = setTimeout(
+        this.checkWebsocket,
+        Math.min(10000, that.timeout)
+      ); //call check function after timeout
     };
 
     ws.onerror = (e) => {
-      console.log('websocket error', e);
+      console.log("websocket error", e);
       this.setWebsocketStatus(`websocket error: ${e}`);
     };
     //console.log('Dashboard componentDidMount', ws);
@@ -79,8 +116,8 @@ export default class Dashboard extends Component {
   };
 
   selectFileToUpload = (e) => {
-    const input = document.createElement('input');
-    input.type = 'file';
+    const input = document.createElement("input");
+    input.type = "file";
 
     input.onchange = (e) => {
       const file = e.target.files[0];
@@ -93,7 +130,7 @@ export default class Dashboard extends Component {
 
   sendFile = (e) => {
     const reader = new FileReader();
-    reader.readAsText(this.state.uploadFile, 'UTF-8');
+    reader.readAsText(this.state.uploadFile, "UTF-8");
 
     // here we tell the reader what to do when it's done reading...
     reader.onload = (readerEvent) => {
@@ -114,10 +151,13 @@ export default class Dashboard extends Component {
   render() {
     return (
       <div>
+        {this.showAlert()}
         <Card>
           <Card.Header>
             <Form.Label className="col-5">Загрузка в DB</Form.Label>
-            <div className="col-12 text-left">Websocket status: {this.state.websocket.status}</div>
+            <div className="col-12 text-left">
+              Websocket status: {this.state.websocket.status}
+            </div>
           </Card.Header>
           <Card.Body>
             <Row>
@@ -130,24 +170,30 @@ export default class Dashboard extends Component {
               />
             </Row>
             <Row>
-              <Form.Label className="col-2 text-left">Файл загрузки в DB</Form.Label>
+              <Form.Label className="col-2 text-left">
+                Файл загрузки в DB
+              </Form.Label>
               <input
                 className="form-control col-3"
                 name="uploadFileName"
                 id="uploadFileName"
                 type="text"
-                value={this.state.uploadFile ? this.state.uploadFile.name : ''}
+                value={this.state.uploadFile ? this.state.uploadFile.name : ""}
                 //onChange={this.change}
                 readOnly
               />
-              <Button variant="primary" className="" onClick={this.selectFileToUpload}>
+              <Button
+                variant="primary"
+                className=""
+                onClick={this.selectFileToUpload}
+              >
                 ...
               </Button>
               <Button
                 variant="primary"
                 className="col-1 ml-2"
                 onClick={this.sendFile}
-                disabled={this.state.uploadFile ? '' : 'disabled'}
+                disabled={this.state.uploadFile ? "" : "disabled"}
               >
                 Старт
               </Button>
@@ -164,7 +210,11 @@ export default class Dashboard extends Component {
               <Form.Label className="col-3 text-left">
                 Выберите формат сохраняемого файла
               </Form.Label>
-              <Form.Control as="select" className="col-2" onChange={this.selectFormat}>
+              <Form.Control
+                as="select"
+                className="col-2"
+                onChange={this.selectFormat}
+              >
                 <option value="json">json</option>
                 <option value="csv">csv</option>
                 <option value="text">text/plain</option>
