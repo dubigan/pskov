@@ -17,8 +17,8 @@ class UploadConsumer(WebsocketConsumer):
           'message': 'data is loaded'
       }))
       #print('UploadConsumer', text_data_json)
-      Owner.objects.all().delete()
-      Car.objects.all().delete()
+      #Owner.objects.all().delete()
+      #Car.objects.all().delete()
       for o in text_data_json:
         #print(o)
         owner = Owner()
