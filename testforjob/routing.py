@@ -1,7 +1,7 @@
 from django.urls import path
 
-from . import consumers
+from .consumers import UploadConsumer
 
 websocket_urlpatterns = [
-    path('testforjob/ws/upload/', consumers.UploadConsumer.as_asgi()),
+    path('testforjob/ws/upload/', UploadConsumer.as_asgi()),
 ]
