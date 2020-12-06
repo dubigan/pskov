@@ -3,8 +3,8 @@ from django.db.models import * #Model, IntegerField, CharField, TextField, DateT
 
 # Create your models here.
 
-class Manufacturer(Model):
-  name = CharField(max_length=20)
+# class Manufacturer(Model):
+#   name = CharField(max_length=20)
 
 
 class Car(Model):
