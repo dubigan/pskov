@@ -1,13 +1,11 @@
 import React, { Component } from "react";
-import { Form, Button, Row, Card, Alert } from "react-bootstrap";
+import { Form, Button, Row, Card } from "react-bootstrap";
+import Alerts from "./Alerts";
 
 export default class Dashboard extends Component {
   state = {
-    alert: {
-      showAlert: false,
-      errors: [],
-      messages: [],
-    },
+    errors: [],
+    messages: [],
     uploadFile: null,
     clearDB: false,
     websocket: {
@@ -19,29 +17,6 @@ export default class Dashboard extends Component {
 
   downloadUrl = "/testforjob/api/download/";
   uploadUrl = "/testforjob/ws/upload/";
-
-  showAlert = () => {
-    if (this.state.alert.showAlert) {
-      setTimeout(
-        () =>
-          this.setState({
-            alert: { messages: [], errors: [], showAlert: false },
-          }),
-        5000
-      );
-      if (this.state.alert.errors.length > 0)
-        return (
-          <Alert variant="danger">{this.state.alert.errors.join(". ")}</Alert>
-        );
-      if (this.state.alert.messages.length > 0)
-        return (
-          <Alert variant="primary">
-            {this.state.alert.messages.join(". ")}
-          </Alert>
-        );
-    }
-    return <div />;
-  };
 
   getDownloadUrl = () => {
     return `/testforjob/api/download_${this.state.downloadFormat}/`;
@@ -77,11 +52,8 @@ export default class Dashboard extends Component {
       //console.log(message);
       //this.setWebsocketStatus(message);
       this.setState({
-        alert: {
-          messages: message.startsWith("success") ? [message] : [],
-          errors: message.startsWith("error") ? [message] : [],
-          showAlert: true,
-        },
+        messages: message.startsWith("success") ? [message] : [],
+        errors: message.startsWith("error") ? [message] : [],
       });
     };
 
@@ -151,7 +123,7 @@ export default class Dashboard extends Component {
   render() {
     return (
       <div>
-        {this.showAlert()}
+        <Alerts messages={this.state.messages} errors={this.state.errors} />
         <Card>
           <Card.Header>
             <Form.Label className="col-5">Загрузка в DB</Form.Label>
