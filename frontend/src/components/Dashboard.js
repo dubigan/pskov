@@ -185,7 +185,7 @@ export default class Dashboard extends Component {
               >
                 <option value="json">json</option>
                 <option value="csv">csv</option>
-                <option value="text">text/plain</option>
+                {/* <option value="text">text/plain</option> */}
               </Form.Control>
               <form action={this.getDownloadUrl()} method="post">
                 <Button variant="primary" type="submit" className="col ml-4">
