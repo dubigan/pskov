@@ -156,3 +156,4 @@ ASGI_APPLICATION = "pskov.asgi.application"
 # }
 #os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pskov.settings")
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
+os.environ["DJANGO_SECRET_KEY"] = SECRET_KEY
