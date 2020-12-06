@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'testforjob',
+    'testforjob.apps.TestforjobConfig',
     'frontend.apps.FrontendConfig',
     'channels'
 ]
