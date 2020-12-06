@@ -33,16 +33,16 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    #'django.contrib.admin',
-    #'django.contrib.auth',
-    #'django.contrib.contenttypes',
-    #'django.contrib.sessions',
-    #'django.contrib.messages',
-    #'django.contrib.staticfiles',
-    #'rest_framework',
-    #'channels',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'rest_framework',
+    'channels',
     'testforjob.apps.TestforjobConfig',
-    #'frontend.apps.FrontendConfig',
+    'frontend.apps.FrontendConfig',
 ]
 
 MIDDLEWARE = [
