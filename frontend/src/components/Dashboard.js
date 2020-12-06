@@ -4,7 +4,6 @@ import Alerts from "./Alerts";
 
 export default class Dashboard extends Component {
   state = {
-    errors: [],
     messages: [],
     uploadFile: null,
     clearDB: false,
@@ -24,7 +23,7 @@ export default class Dashboard extends Component {
 
   setWebsocketStatus = (status) => {
     const websocket = { ...this.state.websocket, status: status };
-    console.log("setWebsocketStatus", websocket);
+    //console.log("setWebsocketStatus", websocket);
     this.setState({ websocket });
   };
 
@@ -34,13 +33,13 @@ export default class Dashboard extends Component {
   };
 
   connectWebsocket = () => {
-    const that = this; // cache the this
+    const self = this; // cache the this
     let connectInterval;
     const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
     const url = `${ws_scheme}://${window.location.host}${this.uploadUrl}`;
     const ws = new WebSocket(url);
     ws.onopen = () => {
-      that.timeout = 250; // reset timer to 250 on open of websocket connection
+      self.timeout = 250; // reset timer to 250 on open of websocket connection
       clearTimeout(connectInterval);
       //console.log(`connected to ${url}`);
       this.setWebsocketStatus(`connected to ${url}`);
@@ -48,12 +47,9 @@ export default class Dashboard extends Component {
 
     ws.onmessage = (evt) => {
       // listen to data sent from the websocket server
-      const message = JSON.parse(evt.data)["message"];
-      //console.log(message);
-      //this.setWebsocketStatus(message);
+      const data = JSON.parse(evt.data);
       this.setState({
-        messages: message.startsWith("success") ? [message] : [],
-        errors: message.startsWith("error") ? [message] : [],
+        messages: data ? [data] : [],
       });
     };
 
@@ -61,10 +57,10 @@ export default class Dashboard extends Component {
       //console.log('disconnected');
       this.setWebsocketStatus("disconnected");
       // automatically try to reconnect on connection loss
-      that.timeout = that.timeout + that.timeout; //increment retry interval
+      self.timeout = self.timeout + self.timeout; //increment retry interval
       connectInterval = setTimeout(
         this.checkWebsocket,
-        Math.min(10000, that.timeout)
+        Math.min(10000, self.timeout)
       ); //call check function after timeout
     };
 
@@ -123,7 +119,7 @@ export default class Dashboard extends Component {
   render() {
     return (
       <div>
-        <Alerts messages={this.state.messages} errors={this.state.errors} />
+        <Alerts messages={this.state.messages} />
         <Card>
           <Card.Header>
             <Form.Label className="col-5">Загрузка в DB</Form.Label>

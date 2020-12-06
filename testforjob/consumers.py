@@ -19,7 +19,8 @@ class UploadConsumer(WebsocketConsumer):
         #print('UploadConsumer clearDB', clearDB)     
         #print('UploadConsumer content', content)
         self.send(text_data=json.dumps({
-            'message': 'success: Успешная загрузка файла'
+          'type': 'success',
+          'message': 'Успешная загрузка файла'
         }))
 
         clearDB = text_data_json.get('cleardb', False)
@@ -30,7 +31,8 @@ class UploadConsumer(WebsocketConsumer):
           Owner.objects.all().delete()
           Car.objects.all().delete()
           self.send(text_data=json.dumps({
-              'message': 'success: Очистка DB завершена'
+            'type': 'success',
+            'message': 'Очистка DB завершена'
           }))
 
         for o in content_json:
@@ -40,9 +42,12 @@ class UploadConsumer(WebsocketConsumer):
           if ownerSer.is_valid(raise_exception=True):
             owner = ownerSer.save()
 
-        self.send(text_data=json.dumps({'message': 'success: Данные загружены в DB'}))
+        self.send(text_data=json.dumps({
+          'type': 'success',
+          'message': 'Данные успешно загружены в DB'}))
       except:
         self.send(text_data=json.dumps({
-          'message': 'error: Ошибка загрузки данных в DB. Используйте формат данных JSON'
+          'type': 'error',
+          'message': 'Ошибка загрузки данных в DB. Используйте формат данных JSON'
       }))
 

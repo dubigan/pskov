@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Alert } from "react-bootstrap";
+import { Alert as ReactAlert } from "react-bootstrap";
 
 export default class Alerts extends Component {
   state = {
@@ -9,16 +9,13 @@ export default class Alerts extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     let showAlert = false;
-    const { messages, errors } = this.props;
-    const { messages: prevMessages, errors: prevErrors } = prevProps;
+    const { messages } = this.props;
+    const { messages: prevMessages } = prevProps;
     // console.log("messages", messages);
     // console.log("errors", errors);
     // console.log("prevMessages", prevMessages);
     // console.log("prevErrors", prevErrors);
 
-    if (errors && errors.length > 0 && errors !== prevErrors) {
-      showAlert = true;
-    }
     if (messages && messages.length > 0 && messages !== prevMessages) {
       showAlert = true;
     }
@@ -38,37 +35,36 @@ export default class Alerts extends Component {
     }
   }
 
+  getReactAlerts = (array) => {
+    return array ? (
+      array.map((e, index) => {
+        const variant = e.type === "success" ? "primary" : "danger";
+        return (
+          <ReactAlert variant={variant} key={index}>
+            {e.message}
+          </ReactAlert>
+        );
+      })
+    ) : (
+      <></>
+    );
+  };
+
+  delay = (wait) =>
+    new Promise((resolve, reject) => {
+      setTimeout(() => resolve(), wait);
+    });
+
   showAlert = () => {
     if (this.state.showAlert) {
-      setTimeout(
-        () =>
-          this.setState({
-            showAlert: false,
-          }),
+      this.delay(
         this.props.timeout ? this.props.timeout : this.state.timeout
+      ).then((res) =>
+        this.setState({
+          showAlert: false,
+        })
       );
-      return (
-        <>
-          {this.props.errors ? (
-            this.props.errors.map((e) => (
-              <Alert variant="danger" key={Date.now()}>
-                {e}
-              </Alert>
-            ))
-          ) : (
-            <></>
-          )}
-          {this.props.messages ? (
-            this.props.messages.map((m) => (
-              <Alert variant="primary" key={Date.now()}>
-                {m}
-              </Alert>
-            ))
-          ) : (
-            <></>
-          )}
-        </>
-      );
+      return <>{this.getReactAlerts(this.props.messages)}</>;
     }
     return <div />;
   };

@@ -1,29 +1,34 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import { Card, Row, Form, Button, Alert, Col, Tooltip, OverlayTrigger } from 'react-bootstrap';
-import Cars from './Cars';
+import React, { Component } from "react";
+import axios from "axios";
+import {
+  Card,
+  Row,
+  Form,
+  Button,
+  Col,
+  Tooltip,
+  OverlayTrigger,
+} from "react-bootstrap";
+import Cars from "./Cars";
+import Alerts from "./Alerts";
 
 export default class OwnerDetail extends Component {
   state = {
-    alert: {
-      showAlert: false,
-      errors: [],
-      messages: [],
-    },
+    messages: [],
     owner: {
       id: -10, // indicate new owner, -1 is not acceptable
       cars: [],
-      name: '',
-      patronymic: '',
-      last_name: '',
-      gender: '',
-      age: '',
-      comment: '',
+      name: "",
+      patronymic: "",
+      last_name: "",
+      gender: "",
+      age: "",
+      comment: "",
     },
   };
 
-  url = '/testforjob/api/owner/';
-  tooltipPlace = 'bottom';
+  url = "/testforjob/api/owner/";
+  tooltipPlace = "bottom";
 
   componentDidMount() {
     this.getOwner();
@@ -39,11 +44,9 @@ export default class OwnerDetail extends Component {
   };
 
   getErrors = (data) => {
-    const errors = [];
-    for (let key in data) {
-      errors.push(data[key]);
-    }
-    return errors;
+    return Object.keys(data).map((key) => {
+      return { type: "error", message: data[key] };
+    });
   };
 
   getOwner = () => {
@@ -52,14 +55,17 @@ export default class OwnerDetail extends Component {
       .then((res) => {
         //console.log('getOwner', res.data);
 
-        const owner = { ...res.data, id: res.data['id'] ? res.data['id'] : -10 };
-        console.log('getOwner', owner);
+        const owner = {
+          ...res.data,
+          id: res.data["id"] ? res.data["id"] : -10,
+        };
+        //console.log("getOwner", owner);
         this.setState({ owner: owner });
       })
       .catch((err) => {
-        console.log('getOwnerDetail getOwner', err.response.data);
+        //console.log("getOwnerDetail getOwner", err.response.data);
         this.setState({
-          alert: { messages: [], errors: this.getErrors(err.response.data), showAlert: true },
+          messages: this.getErrors(err.response.data),
         });
       });
   };
@@ -72,17 +78,15 @@ export default class OwnerDetail extends Component {
 
         this.setState({
           owner: res.data,
-          alert: {
-            showAlert: true,
-            messages: ['Информация о владельце сохранена'],
-            errors: [],
-          },
+          messages: [
+            { type: "success", message: "Информация о владельце сохранена" },
+          ],
         });
       })
       .catch((err) => {
-        console.log('getOwnerDetail saveOwner', err.response.data);
+        //console.log("getOwnerDetail saveOwner", err.response.data);
         this.setState({
-          alert: { messages: [], errors: this.getErrors(err.response.data), showAlert: true },
+          messages: this.getErrors(err.response.data),
         });
       });
   };
@@ -90,16 +94,16 @@ export default class OwnerDetail extends Component {
   changeOwner = (e) => {
     let owner;
     switch (e.target.name) {
-      case 'gender-f':
+      case "gender-f":
         owner = {
           ...this.state.owner,
-          gender: 'f',
+          gender: "f",
         };
         break;
-      case 'gender-m':
+      case "gender-m":
         owner = {
           ...this.state.owner,
-          gender: 'm',
+          gender: "m",
         };
         break;
       default:
@@ -113,35 +117,30 @@ export default class OwnerDetail extends Component {
     this.setState({ owner });
   };
 
-  showAlert = () => {
-    if (this.state.alert.showAlert) {
-      setTimeout(
-        () => this.setState({ alert: { messages: [], errors: [], showAlert: false } }),
-        5000
-      );
-      if (this.state.alert.errors.length > 0)
-        return <Alert variant="danger">{this.state.alert.errors.join('. ')}</Alert>;
-      if (this.state.alert.messages.length > 0)
-        return <Alert variant="primary">{this.state.alert.messages.join('. ')}</Alert>;
-    }
-    return <div />;
-  };
-
   btnNewCarClick = () => {
     axios
-      .post(this.url, { btn_add: '', url: window.location.pathname, owner_pk: this.state.owner.id })
+      .post(this.url, {
+        btn_add: "",
+        url: window.location.pathname,
+        owner_pk: this.state.owner.id,
+      })
       .then((res) => {
         if (res.data.redirect) {
-          window.location.href = res.data['redirect'];
+          window.location.href = res.data["redirect"];
         }
       })
-      .catch((err) => console.log('btnAddClick', err.response.data));
+      .catch((err) => {
+        //console.log("btnAddClick", err.response.data);
+        this.setState({
+          messages: this.getErrors(err.response.data),
+        });
+      });
   };
 
   render() {
     return (
       <div>
-        {this.showAlert()}
+        <Alerts messages={this.state.messages} />
         <Card>
           <Card.Title>Автовладелец</Card.Title>
           <Card.Body>
@@ -153,7 +152,7 @@ export default class OwnerDetail extends Component {
                     className="form-control col-6"
                     name="name"
                     type="text"
-                    value={this.state.owner.name ? this.state.owner.name : ''}
+                    value={this.state.owner.name ? this.state.owner.name : ""}
                     onChange={this.changeOwner}
                   />
                   <Form.Label className="col-4">Отчество</Form.Label>
@@ -161,7 +160,11 @@ export default class OwnerDetail extends Component {
                     className="form-control col-6"
                     name="patronymic"
                     type="text"
-                    value={this.state.owner.patronymic ? this.state.owner.patronymic : ''}
+                    value={
+                      this.state.owner.patronymic
+                        ? this.state.owner.patronymic
+                        : ""
+                    }
                     onChange={this.changeOwner}
                   />
                   <Form.Label className="col-4">Фамилия</Form.Label>
@@ -169,7 +172,11 @@ export default class OwnerDetail extends Component {
                     className="form-control col-6"
                     name="last_name"
                     type="text"
-                    value={this.state.owner.last_name ? this.state.owner.last_name : ''}
+                    value={
+                      this.state.owner.last_name
+                        ? this.state.owner.last_name
+                        : ""
+                    }
                     onChange={this.changeOwner}
                   />
                   <Form.Label className="col-4" name="gender">
@@ -183,7 +190,7 @@ export default class OwnerDetail extends Component {
                       className="form-control col-1 border-0"
                       name="gender-m"
                       type="radio"
-                      checked={this.state.owner.gender === 'm' ? 1 : 0}
+                      checked={this.state.owner.gender === "m" ? 1 : 0}
                       onChange={this.changeOwner}
                     />
                     <Form.Label className="col-1" name="gender-f">
@@ -193,7 +200,7 @@ export default class OwnerDetail extends Component {
                       className="form-control col-1 border-0"
                       name="gender-f"
                       type="radio"
-                      checked={this.state.owner.gender === 'f' ? 1 : 0}
+                      checked={this.state.owner.gender === "f" ? 1 : 0}
                       onChange={this.changeOwner}
                     />
                   </Row>
@@ -205,7 +212,7 @@ export default class OwnerDetail extends Component {
                     name="age"
                     type="text"
                     maxLength="3"
-                    value={this.state.owner.age ? this.state.owner.age : ''}
+                    value={this.state.owner.age ? this.state.owner.age : ""}
                     onChange={this.changeOwner}
                     onKeyPress={this.digitsOnly}
                   />
@@ -229,10 +236,16 @@ export default class OwnerDetail extends Component {
                   key={1}
                   placement={this.tooltipPlace}
                   overlay={
-                    <Tooltip id={`tooltip-1`}>Сохранить информацию об автовладельце</Tooltip>
+                    <Tooltip id={`tooltip-1`}>
+                      Сохранить информацию об автовладельце
+                    </Tooltip>
                   }
                 >
-                  <Button variant="primary" className="col" onClick={this.saveOwner}>
+                  <Button
+                    variant="primary"
+                    className="col"
+                    onClick={this.saveOwner}
+                  >
                     Сохранить
                   </Button>
                 </OverlayTrigger>
@@ -248,14 +261,16 @@ export default class OwnerDetail extends Component {
                 <OverlayTrigger
                   key={2}
                   placement={this.tooltipPlace}
-                  overlay={<Tooltip id={`tooltip-2`}>Добавить автомобиль</Tooltip>}
+                  overlay={
+                    <Tooltip id={`tooltip-2`}>Добавить автомобиль</Tooltip>
+                  }
                 >
                   <Button
                     variant="primary"
                     className="col"
                     name="add_car"
                     onClick={this.btnNewCarClick}
-                    disabled={this.state.owner.id < 0 ? 'disabled' : ''}
+                    disabled={this.state.owner.id < 0 ? "disabled" : ""}
                   >
                     Добавить автомобиль
                   </Button>

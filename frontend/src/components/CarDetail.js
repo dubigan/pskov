@@ -1,35 +1,39 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import { Card, Row, Form, Button, Alert, Tooltip, OverlayTrigger } from 'react-bootstrap';
-import DatePicker from 'react-datepicker';
-import { registerLocale } from 'react-datepicker';
+import React, { Component } from "react";
+import axios from "axios";
+import {
+  Card,
+  Row,
+  Form,
+  Button,
+  Tooltip,
+  OverlayTrigger,
+} from "react-bootstrap";
+import DatePicker from "react-datepicker";
+import { registerLocale } from "react-datepicker";
 //import 'react-day-picker/lib/style.css';
-import 'react-datepicker/dist/react-datepicker.css';
-import { ru } from 'date-fns/locale/ru/index.js';
+import "react-datepicker/dist/react-datepicker.css";
+import ru from "date-fns/locale/ru";
+import Alerts from "./Alerts";
 
 export default class CarDetail extends Component {
   state = {
-    alert: {
-      showAlert: false,
-      errors: [],
-      messages: [],
-    },
+    messages: [],
     car: {
-      manufacturer: '',
-      model: '',
-      production: '',
-      color: '',
-      power: '',
-      mileage: '',
-      comment: '',
+      manufacturer: "",
+      model: "",
+      production: "",
+      color: "",
+      power: "",
+      mileage: "",
+      comment: "",
     },
   };
 
-  url = '/testforjob/api/car/';
-  tooltipPlace = 'bottom';
+  url = "/testforjob/api/car/";
+  tooltipPlace = "bottom";
 
   componentDidMount() {
-    //registerLocale('ru', ru);
+    registerLocale("ru", ru);
     this.getCar();
   }
 
@@ -43,25 +47,9 @@ export default class CarDetail extends Component {
   };
 
   getErrors = (data) => {
-    const errors = [];
-    for (let key in data) {
-      errors.push(data[key]);
-    }
-    return errors;
-  };
-
-  showAlert = () => {
-    if (this.state.alert.showAlert) {
-      setTimeout(
-        () => this.setState({ alert: { messages: [], errors: [], showAlert: false } }),
-        5000
-      );
-      if (this.state.alert.errors.length > 0)
-        return <Alert variant="danger">{this.state.alert.errors.join('. ')}</Alert>;
-      if (this.state.alert.messages.length > 0)
-        return <Alert variant="primary">{this.state.alert.messages.join('. ')}</Alert>;
-    }
-    return <div />;
+    return Object.keys(data).map((key) => {
+      return { type: "error", message: data[key] };
+    });
   };
 
   changeCar = (e) => {
@@ -78,14 +66,14 @@ export default class CarDetail extends Component {
   };
 
   changeDate = (date) => {
-    console.log('changeDate date', date);
-    const dt = new Date(date).toLocaleDateString('ru');
-    console.log('changeDate date', dt);
+    //console.log("changeDate date", date);
+    const dt = new Date(date).toLocaleDateString("ru");
+    //console.log("changeDate date", dt);
     const car = {
       ...this.state.car,
-      production: new Date(date).toLocaleDateString('ru'),
+      production: new Date(date).toLocaleDateString("ru"),
     };
-    console.log('changeDate car', car);
+    //console.log("changeDate car", car);
 
     this.setState({ car });
   };
@@ -94,24 +82,25 @@ export default class CarDetail extends Component {
     axios
       .post(this.url, { car: this.state.car })
       .then((res) => {
-        console.log('saveCar', res.data);
+        //console.log("saveCar", res.data);
         if (res.data.redirect) {
-          window.location.href = res.data['redirect'];
+          window.location.href = res.data["redirect"];
         }
 
         this.setState({
           car: res.data,
-          alert: {
-            showAlert: true,
-            messages: ['Информация об автомобиле сохранена'],
-            errors: [],
-          },
+          messages: [
+            {
+              type: "success",
+              message: "Информация об автомобиле сохранена",
+            },
+          ],
         });
       })
       .catch((err) => {
-        console.log('geCarDetail saveCar', err.response.data);
+        //console.log("geCarDetail saveCar", err.response.data);
         this.setState({
-          alert: { messages: [], errors: this.getErrors(err.response.data), showAlert: true },
+          messages: this.getErrors(err.response.data),
         });
       });
   };
@@ -120,14 +109,14 @@ export default class CarDetail extends Component {
     axios
       .post(this.url, {})
       .then((res) => {
-        console.log('getCar', res.data);
+        //console.log("getCar", res.data);
 
         this.setState({ car: res.data });
       })
       .catch((err) => {
-        console.log('getCarDetail getCar', err.response.data);
+        //console.log("getCarDetail getCar", err.response.data);
         this.setState({
-          alert: { messages: [], errors: this.getErrors(err.response.data), showAlert: true },
+          messages: this.getErrors(err.response.data),
         });
       });
   };
@@ -135,7 +124,7 @@ export default class CarDetail extends Component {
   render() {
     return (
       <div>
-        {this.showAlert()}
+        <Alerts messages={this.state.messages} />
         <Card>
           <Card.Title>Автомобиль</Card.Title>
           <Card.Body>
@@ -168,7 +157,7 @@ export default class CarDetail extends Component {
                   <DatePicker
                     className="col-11"
                     //format="dd.MM.yyyy"
-                    locale={ru}
+                    locale="ru"
                     name="production"
                     showYearDropdown={true}
                     onChange={this.changeDate}
@@ -193,7 +182,7 @@ export default class CarDetail extends Component {
                     name="power"
                     type="text"
                     maxLength="3"
-                    value={this.state.car.power ? this.state.car.power : ''}
+                    value={this.state.car.power ? this.state.car.power : ""}
                     onChange={this.changeCar}
                     onKeyPress={this.digitsOnly}
                   />
@@ -205,7 +194,7 @@ export default class CarDetail extends Component {
                     name="mileage"
                     type="text"
                     maxLength="10"
-                    value={this.state.car.mileage ? this.state.car.mileage : ''}
+                    value={this.state.car.mileage ? this.state.car.mileage : ""}
                     onChange={this.changeCar}
                     onKeyPress={this.digitsOnly}
                   />
@@ -228,9 +217,17 @@ export default class CarDetail extends Component {
                 <OverlayTrigger
                   key={2}
                   placement={this.tooltipPlace}
-                  overlay={<Tooltip id={`tooltip-2`}>Сохранить информацию об автомобиле</Tooltip>}
+                  overlay={
+                    <Tooltip id={`tooltip-2`}>
+                      Сохранить информацию об автомобиле
+                    </Tooltip>
+                  }
                 >
-                  <Button variant="primary" className="col" onClick={this.saveCar}>
+                  <Button
+                    variant="primary"
+                    className="col"
+                    onClick={this.saveCar}
+                  >
                     Сохранить
                   </Button>
                 </OverlayTrigger>

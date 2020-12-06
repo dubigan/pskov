@@ -10,5 +10,4 @@ urlpatterns = [
   path('api/download_json/', download_json, name='download-db-json'),
   path('api/download_csv/', download_csv, name='download-db-csv'),
   path('api/download_text/', download_text, name='download-db-text'),
-  path('api/upload/', uploadDB, name='upload-db'),
 ]

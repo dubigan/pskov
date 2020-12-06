@@ -89,19 +89,19 @@ class CarsListView(APIView):
     return Response()
 
   def post(self, request, format=None):
-    if request.data.get('btn_del', None) != None:
-      car = getCar(request)
-      car.delete()
-
     if request.data.get('btn_edit', None) != None:
       car = getCar(request)
       request.session['car_pk'] = car.pk
       request.session['back_from_car'] = request.data.get('url', None)
       return Response({ 'redirect': '/testforjob/car'})
 
+    if request.data.get('btn_del', None) != None:
+      car = getCar(request)
+      car.delete()
+
     cars = None
     if (owner_pk := request.data.get('owner', -1)) != -1:
-      print('CarsListView owner_pk', owner_pk)
+      #print('CarsListView owner_pk', owner_pk)
       try:
         cars = Car.objects.filter(owner = owner_pk)
       except Exception as e:
@@ -109,7 +109,7 @@ class CarsListView(APIView):
         cars = Car.objects.none()
     else:
       cars = Car.objects.all()
-    carsSer = CarSerializer(cars, many=True)
+    #carsSer = CarSerializer(cars, many=True)
 
     if (sortedBy := request.data.get('sorted_by', None)) != None:
       #print('owners post sortedBy', sortedBy)
@@ -118,7 +118,9 @@ class CarsListView(APIView):
       if len(name) > 0:
         direction = '-' if sortedBy['direction'] == 'desc' else ''
         cars = cars.order_by(direction + name)
-      carsSer = CarSerializer(cars, many=True)
+    
+    carsSer = CarSerializer(cars, many=True)
+    #print('CarsListView', carsSer.data)
 
     return Response(carsSer.data)
   
@@ -157,27 +159,32 @@ class Dashboard(APIView):
     return Response()
 
 
+def removeId(data):
+  for o in data:
+    #print('download_json', o)
+    try:
+      o.pop('id')
+      for car in o['cars']:
+        print('download_json', car)
+        car.pop('id')
+        #car.pop('owner')
+    except: pass
+
+def getDataForDownload():
+  owners = Owner.objects.all()
+  ownersSer = OwnerSerializer(owners, many=True) 
+  removeId(ownersSer.data)
+  return ownersSer.data
+
 @api_view(['POST',])
 @renderer_classes((CSVRenderer,))
 def download_csv(request, format=None):
-  owners = Owner.objects.all()
-  ownersSer = OwnerSerializer(owners, many=True) 
-  return Response(ownersSer.data, headers={'content-disposition': 'attachment; filename="file.csv"'} )
+  return Response(getDataForDownload(), headers={'content-disposition': 'attachment; filename="file.csv"'} )
 
 @api_view(['POST',])
 @renderer_classes((JSONRenderer,))
 def download_json(request, format=None):
-  owners = Owner.objects.all()
-  ownersSer = OwnerSerializer(owners, many=True)
-  for o in ownersSer.data:
-    #print('download_json', o)
-    try:
-      #o.pop('id')
-      for car in o['cars']:
-        print('download_json', car)
-        car.pop('owner')
-    except: pass
-  return Response(ownersSer.data, headers={'content-disposition': 'attachment; filename="file.json"'} )
+  return Response(getDataForDownload(), headers={'content-disposition': 'attachment; filename="file.json"'} )
 
 class PlainTextRenderer(renderers.BaseRenderer):
     media_type = 'text/plain'
@@ -190,11 +197,6 @@ class PlainTextRenderer(renderers.BaseRenderer):
 @api_view(['POST',])
 @renderer_classes((PlainTextRenderer,))
 def download_text(request, format=None):
-  owners = Owner.objects.all()
-  ownersSer = OwnerSerializer(owners, many=True)
-  return Response(ownersSer.data, headers={'content-disposition': 'attachment; filename="file.txt"'} )
+  return Response(getDataForDownload(), headers={'content-disposition': 'attachment; filename="file.txt"'} )
 
-@api_view(('POST',))
-def uploadDB(request, format=None):
-  pass
 

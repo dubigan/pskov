@@ -59,24 +59,29 @@ var Alerts = /*#__PURE__*/function (_Component) {
     return _possibleConstructorReturn(_this, (_temp = _this = _super.call.apply(_super, [this].concat(args)), _this.state = {
       showAlert: false,
       timeout: 5000
+    }, _this.getReactAlerts = function (array) {
+      return array ? array.map(function (e, index) {
+        var variant = e.type === "success" ? "primary" : "danger";
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__.default, {
+          variant: variant,
+          key: index
+        }, e.message);
+      }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null);
+    }, _this.delay = function (wait) {
+      return new Promise(function (resolve, reject) {
+        setTimeout(function () {
+          return resolve();
+        }, wait);
+      });
     }, _this.showAlert = function () {
       if (_this.state.showAlert) {
-        setTimeout(function () {
+        _this.delay(_this.props.timeout ? _this.props.timeout : _this.state.timeout).then(function (res) {
           return _this.setState({
             showAlert: false
           });
-        }, _this.props.timeout ? _this.props.timeout : _this.state.timeout);
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, _this.props.errors ? _this.props.errors.map(function (e) {
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__.default, {
-            variant: "danger",
-            key: Date.now()
-          }, e);
-        }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null), _this.props.messages ? _this.props.messages.map(function (m) {
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__.default, {
-            variant: "primary",
-            key: Date.now()
-          }, m);
-        }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null));
+        });
+
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, _this.getReactAlerts(_this.props.messages));
       }
 
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null);
@@ -87,18 +92,11 @@ var Alerts = /*#__PURE__*/function (_Component) {
     key: "componentDidUpdate",
     value: function componentDidUpdate(prevProps, prevState) {
       var showAlert = false;
-      var _this$props = this.props,
-          messages = _this$props.messages,
-          errors = _this$props.errors;
-      var prevMessages = prevProps.messages,
-          prevErrors = prevProps.errors; // console.log("messages", messages);
+      var messages = this.props.messages;
+      var prevMessages = prevProps.messages; // console.log("messages", messages);
       // console.log("errors", errors);
       // console.log("prevMessages", prevMessages);
       // console.log("prevErrors", prevErrors);
-
-      if (errors && errors.length > 0 && errors !== prevErrors) {
-        showAlert = true;
-      }
 
       if (messages && messages.length > 0 && messages !== prevMessages) {
         showAlert = true;
@@ -201,7 +199,6 @@ var Dashboard = /*#__PURE__*/function (_Component) {
     }
 
     return _possibleConstructorReturn(_this, (_temp = _this = _super.call.apply(_super, [this].concat(args)), _this.state = {
-      errors: [],
       messages: [],
       uploadFile: null,
       clearDB: false,
@@ -215,9 +212,8 @@ var Dashboard = /*#__PURE__*/function (_Component) {
     }, _this.setWebsocketStatus = function (status) {
       var websocket = _objectSpread(_objectSpread({}, _this.state.websocket), {}, {
         status: status
-      });
+      }); //console.log("setWebsocketStatus", websocket);
 
-      console.log("setWebsocketStatus", websocket);
 
       _this.setState({
         websocket: websocket
@@ -226,7 +222,7 @@ var Dashboard = /*#__PURE__*/function (_Component) {
       var ws = _this.state.websocket.ws;
       if (!ws || ws.readyState === WebSocket.CLOSED) _this.connectWebsocket(); //check if websocket instance is closed, if so call `connect` function.
     }, _this.connectWebsocket = function () {
-      var that = _assertThisInitialized(_this); // cache the this
+      var self = _assertThisInitialized(_this); // cache the this
 
 
       var connectInterval;
@@ -235,7 +231,7 @@ var Dashboard = /*#__PURE__*/function (_Component) {
       var ws = new WebSocket(url);
 
       ws.onopen = function () {
-        that.timeout = 250; // reset timer to 250 on open of websocket connection
+        self.timeout = 250; // reset timer to 250 on open of websocket connection
 
         clearTimeout(connectInterval); //console.log(`connected to ${url}`);
 
@@ -244,12 +240,10 @@ var Dashboard = /*#__PURE__*/function (_Component) {
 
       ws.onmessage = function (evt) {
         // listen to data sent from the websocket server
-        var message = JSON.parse(evt.data)["message"]; //console.log(message);
-        //this.setWebsocketStatus(message);
+        var data = JSON.parse(evt.data);
 
         _this.setState({
-          messages: message.startsWith("success") ? [message] : [],
-          errors: message.startsWith("error") ? [message] : []
+          messages: data ? [data] : []
         });
       };
 
@@ -258,9 +252,9 @@ var Dashboard = /*#__PURE__*/function (_Component) {
         _this.setWebsocketStatus("disconnected"); // automatically try to reconnect on connection loss
 
 
-        that.timeout = that.timeout + that.timeout; //increment retry interval
+        self.timeout = self.timeout + self.timeout; //increment retry interval
 
-        connectInterval = setTimeout(_this.checkWebsocket, Math.min(10000, that.timeout)); //call check function after timeout
+        connectInterval = setTimeout(_this.checkWebsocket, Math.min(10000, self.timeout)); //call check function after timeout
       };
 
       ws.onerror = function (e) {
@@ -327,8 +321,7 @@ var Dashboard = /*#__PURE__*/function (_Component) {
     key: "render",
     value: function render() {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Alerts__WEBPACK_IMPORTED_MODULE_1__.default, {
-        messages: this.state.messages,
-        errors: this.state.errors
+        messages: this.state.messages
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__.default.Header, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__.default.Label, {
         className: "col-5"
       }, "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430 \u0432 DB"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {

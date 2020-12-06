@@ -18,7 +18,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Alert.js");
 /* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Card.js");
 /* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Row.js");
 /* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Form.js");
@@ -27,6 +26,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Button.js");
 /* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Col.js");
 /* harmony import */ var _Cars__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Cars */ "./src/components/Cars.js");
+/* harmony import */ var _Alerts__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Alerts */ "./src/components/Alerts.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -60,6 +60,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+
 var OwnerDetail = /*#__PURE__*/function (_Component) {
   _inherits(OwnerDetail, _Component);
 
@@ -75,23 +76,19 @@ var OwnerDetail = /*#__PURE__*/function (_Component) {
     }
 
     return _possibleConstructorReturn(_this, (_temp = _this = _super.call.apply(_super, [this].concat(args)), _this.state = {
-      alert: {
-        showAlert: false,
-        errors: [],
-        messages: []
-      },
+      messages: [],
       owner: {
         id: -10,
         // indicate new owner, -1 is not acceptable
         cars: [],
-        name: '',
-        patronymic: '',
-        last_name: '',
-        gender: '',
-        age: '',
-        comment: ''
+        name: "",
+        patronymic: "",
+        last_name: "",
+        gender: "",
+        age: "",
+        comment: ""
       }
-    }, _this.url = '/testforjob/api/owner/', _this.tooltipPlace = 'bottom', _this.digitsOnly = function (e) {
+    }, _this.url = "/testforjob/api/owner/", _this.tooltipPlace = "bottom", _this.digitsOnly = function (e) {
       var charCode = e.charCode; //console.log(charCode);
 
       if (charCode < 48 || charCode > 57) {
@@ -99,34 +96,27 @@ var OwnerDetail = /*#__PURE__*/function (_Component) {
         e.preventDefault();
       }
     }, _this.getErrors = function (data) {
-      var errors = [];
-
-      for (var key in data) {
-        errors.push(data[key]);
-      }
-
-      return errors;
+      return Object.keys(data).map(function (key) {
+        return {
+          type: "error",
+          message: data[key]
+        };
+      });
     }, _this.getOwner = function () {
       axios__WEBPACK_IMPORTED_MODULE_1___default().post(_this.url, {}).then(function (res) {
         //console.log('getOwner', res.data);
         var owner = _objectSpread(_objectSpread({}, res.data), {}, {
-          id: res.data['id'] ? res.data['id'] : -10
-        });
+          id: res.data["id"] ? res.data["id"] : -10
+        }); //console.log("getOwner", owner);
 
-        console.log('getOwner', owner);
 
         _this.setState({
           owner: owner
         });
       }).catch(function (err) {
-        console.log('getOwnerDetail getOwner', err.response.data);
-
+        //console.log("getOwnerDetail getOwner", err.response.data);
         _this.setState({
-          alert: {
-            messages: [],
-            errors: _this.getErrors(err.response.data),
-            showAlert: true
-          }
+          messages: _this.getErrors(err.response.data)
         });
       });
     }, _this.saveOwner = function () {
@@ -136,36 +126,30 @@ var OwnerDetail = /*#__PURE__*/function (_Component) {
         //console.log('saveOwner', res.data);
         _this.setState({
           owner: res.data,
-          alert: {
-            showAlert: true,
-            messages: ['Информация о владельце сохранена'],
-            errors: []
-          }
+          messages: [{
+            type: "success",
+            message: "Информация о владельце сохранена"
+          }]
         });
       }).catch(function (err) {
-        console.log('getOwnerDetail saveOwner', err.response.data);
-
+        //console.log("getOwnerDetail saveOwner", err.response.data);
         _this.setState({
-          alert: {
-            messages: [],
-            errors: _this.getErrors(err.response.data),
-            showAlert: true
-          }
+          messages: _this.getErrors(err.response.data)
         });
       });
     }, _this.changeOwner = function (e) {
       var owner;
 
       switch (e.target.name) {
-        case 'gender-f':
+        case "gender-f":
           owner = _objectSpread(_objectSpread({}, _this.state.owner), {}, {
-            gender: 'f'
+            gender: "f"
           });
           break;
 
-        case 'gender-m':
+        case "gender-m":
           owner = _objectSpread(_objectSpread({}, _this.state.owner), {}, {
-            gender: 'm'
+            gender: "m"
           });
           break;
 
@@ -177,37 +161,20 @@ var OwnerDetail = /*#__PURE__*/function (_Component) {
       _this.setState({
         owner: owner
       });
-    }, _this.showAlert = function () {
-      if (_this.state.alert.showAlert) {
-        setTimeout(function () {
-          return _this.setState({
-            alert: {
-              messages: [],
-              errors: [],
-              showAlert: false
-            }
-          });
-        }, 5000);
-        if (_this.state.alert.errors.length > 0) return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__.default, {
-          variant: "danger"
-        }, _this.state.alert.errors.join('. '));
-        if (_this.state.alert.messages.length > 0) return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__.default, {
-          variant: "primary"
-        }, _this.state.alert.messages.join('. '));
-      }
-
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null);
     }, _this.btnNewCarClick = function () {
       axios__WEBPACK_IMPORTED_MODULE_1___default().post(_this.url, {
-        btn_add: '',
+        btn_add: "",
         url: window.location.pathname,
         owner_pk: _this.state.owner.id
       }).then(function (res) {
         if (res.data.redirect) {
-          window.location.href = res.data['redirect'];
+          window.location.href = res.data["redirect"];
         }
       }).catch(function (err) {
-        return console.log('btnAddClick', err.response.data);
+        //console.log("btnAddClick", err.response.data);
+        _this.setState({
+          messages: _this.getErrors(err.response.data)
+        });
       });
     }, _temp));
   }
@@ -220,7 +187,9 @@ var OwnerDetail = /*#__PURE__*/function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, this.showAlert(), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__.default.Title, null, "\u0410\u0432\u0442\u043E\u0432\u043B\u0430\u0434\u0435\u043B\u0435\u0446"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__.default.Body, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_Alerts__WEBPACK_IMPORTED_MODULE_3__.default, {
+        messages: this.state.messages
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__.default.Title, null, "\u0410\u0432\u0442\u043E\u0432\u043B\u0430\u0434\u0435\u043B\u0435\u0446"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__.default.Body, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         className: "col-5"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__.default.Label, {
         className: "col-4"
@@ -228,7 +197,7 @@ var OwnerDetail = /*#__PURE__*/function (_Component) {
         className: "form-control col-6",
         name: "name",
         type: "text",
-        value: this.state.owner.name ? this.state.owner.name : '',
+        value: this.state.owner.name ? this.state.owner.name : "",
         onChange: this.changeOwner
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__.default.Label, {
         className: "col-4"
@@ -236,7 +205,7 @@ var OwnerDetail = /*#__PURE__*/function (_Component) {
         className: "form-control col-6",
         name: "patronymic",
         type: "text",
-        value: this.state.owner.patronymic ? this.state.owner.patronymic : '',
+        value: this.state.owner.patronymic ? this.state.owner.patronymic : "",
         onChange: this.changeOwner
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__.default.Label, {
         className: "col-4"
@@ -244,7 +213,7 @@ var OwnerDetail = /*#__PURE__*/function (_Component) {
         className: "form-control col-6",
         name: "last_name",
         type: "text",
-        value: this.state.owner.last_name ? this.state.owner.last_name : '',
+        value: this.state.owner.last_name ? this.state.owner.last_name : "",
         onChange: this.changeOwner
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__.default.Label, {
         className: "col-4",
@@ -258,7 +227,7 @@ var OwnerDetail = /*#__PURE__*/function (_Component) {
         className: "form-control col-1 border-0",
         name: "gender-m",
         type: "radio",
-        checked: this.state.owner.gender === 'm' ? 1 : 0,
+        checked: this.state.owner.gender === "m" ? 1 : 0,
         onChange: this.changeOwner
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__.default.Label, {
         className: "col-1",
@@ -267,7 +236,7 @@ var OwnerDetail = /*#__PURE__*/function (_Component) {
         className: "form-control col-1 border-0",
         name: "gender-f",
         type: "radio",
-        checked: this.state.owner.gender === 'f' ? 1 : 0,
+        checked: this.state.owner.gender === "f" ? 1 : 0,
         onChange: this.changeOwner
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__.default.Label, {
         className: "col-4",
@@ -277,7 +246,7 @@ var OwnerDetail = /*#__PURE__*/function (_Component) {
         name: "age",
         type: "text",
         maxLength: "3",
-        value: this.state.owner.age ? this.state.owner.age : '',
+        value: this.state.owner.age ? this.state.owner.age : "",
         onChange: this.changeOwner,
         onKeyPress: this.digitsOnly
       }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
@@ -319,7 +288,7 @@ var OwnerDetail = /*#__PURE__*/function (_Component) {
         className: "col",
         name: "add_car",
         onClick: this.btnNewCarClick,
-        disabled: this.state.owner.id < 0 ? 'disabled' : ''
+        disabled: this.state.owner.id < 0 ? "disabled" : ""
       }, "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0430\u0432\u0442\u043E\u043C\u043E\u0431\u0438\u043B\u044C"))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
         className: "row spacer"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {

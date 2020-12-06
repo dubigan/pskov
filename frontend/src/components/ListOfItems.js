@@ -1,23 +1,25 @@
-import React, { Component } from 'react';
-import axios from 'axios';
+import React, { Component } from "react";
+import axios from "axios";
 
 export default class ListOfItems extends Component {
   state = {
     loading: false,
+    messages: [],
     showDeleteDialog: false,
-    itemDelete: '',
+    itemDelete: "",
     items: [],
     sortedBy: {
-      name: '',
-      direction: 'asc',
+      name: "",
+      direction: "asc",
     },
   };
 
-  url = '';
+  url = "";
   //upArrow = '&#x0225C;';
-  upArrow = '\u2191';
+  upArrow = "\u2191";
   //downArrow = '&#x0225C;';
-  downArrow = '\u2193';
+  downArrow = "\u2193";
+  nameOfItem = "";
 
   componentDidMount() {
     this.getItems();
@@ -34,8 +36,16 @@ export default class ListOfItems extends Component {
 
   get arrow() {
     //console.log('arrow', this.state.sortedBy.direction);
-    return this.state.sortedBy.direction === 'asc' ? this.upArrow : this.downArrow;
+    return this.state.sortedBy.direction === "asc"
+      ? this.upArrow
+      : this.downArrow;
   }
+
+  getErrors = (data) => {
+    return Object.keys(data).map((key) => {
+      return { type: "error", message: data[key] };
+    });
+  };
 
   getItems = () => {
     this.setState({ loading: true });
@@ -46,10 +56,15 @@ export default class ListOfItems extends Component {
         owner: this.props.owner ? this.props.owner : -1,
       })
       .then((res) => {
-        //console.log('getItems', res.data);
+        //console.log(`getItems ${this.nameOfItem}`, res.data);
         this.setState({ items: res.data });
       })
-      .catch((err) => console.log('getItems', err.response.data))
+      .catch((err) => {
+        //console.log("getItems", err.response.data);
+        this.setState({
+          messages: this.getErrors(err.response.data),
+        });
+      })
       .finally(() => this.setState({ loading: false }));
   };
 
@@ -64,14 +79,15 @@ export default class ListOfItems extends Component {
     if (this.state.sortedBy.name !== sorted_name) {
       const sortedBy = {
         name: sorted_name,
-        direction: 'desc',
+        direction: "desc",
       };
       //console.log('btnSortClick sortedBy', sortedBy);
       this.setState({
         sortedBy: sortedBy,
       });
     } else {
-      const direction = this.state.sortedBy.direction === 'desc' ? 'asc' : 'desc';
+      const direction =
+        this.state.sortedBy.direction === "desc" ? "asc" : "desc";
       //console.log('btnSortClick direction', direction);
 
       const sortedBy = {
@@ -95,47 +111,71 @@ export default class ListOfItems extends Component {
 
   btnAddClick = (e) => {
     axios
-      .post(this.url, { btn_add: '' })
+      .post(this.url, { btn_add: "" })
       .then((res) => {
         if (res.data.redirect) {
-          window.location.href = res.data['redirect'];
+          window.location.href = res.data["redirect"];
         }
       })
-      .catch((err) => console.log('btnAddClick', err.response.data));
+      .catch((err) => {
+        //console.log("btnAddClick", err.response.data);
+        this.setState({
+          messages: this.getErrors(err.response.data),
+        });
+      });
   };
 
   btnEditClick = (e) => {
     axios
       .post(this.url, {
-        btn_edit: '',
+        btn_edit: "",
         item_pk: e.target.value,
         url: window.location.pathname,
       })
       .then((res) => {
         if (res.data.redirect) {
-          window.location.href = res.data['redirect'];
+          window.location.href = res.data["redirect"];
         }
       })
-      .catch((err) => console.log('btnEditClick', err.response.data));
+      .catch((err) => {
+        //console.log("btnEditClick", err.response.data);
+        this.setState({
+          messages: this.getErrors(err.response.data),
+        });
+      });
   };
 
   itemDelete = (confirm) => {
     this.setState({ showDeleteDialog: false });
     //console.log('itemDelete', confirm);
 
-    if (confirm === 'true') {
+    if (confirm === "true") {
       this.setState({ loading: true });
       axios
         .post(this.url, {
           sorted_by: this.state.sortedBy,
-          btn_del: '',
+          btn_del: "",
           item_pk: this.state.itemDelete.id,
+          owner: this.props.owner ? this.props.owner : -1,
         })
         .then((res) => {
-          console.log('delBtnClick', res.data);
-          this.setState({ items: res.data });
+          //console.log("delBtnClick", res.data);
+          this.setState({
+            items: res.data,
+            messages: [
+              {
+                type: "success",
+                message: `${this.nameOfItem} успешно удален`,
+              },
+            ],
+          });
         })
-        .catch((err) => console.log('delBtnClick', err.response.data))
+        .catch((err) => {
+          //console.log("delBtnClick", err.response.data);
+          this.setState({
+            messages: this.getErrors(err.response.data),
+          });
+        })
         .finally(() => this.setState({ loading: false }));
     }
   };

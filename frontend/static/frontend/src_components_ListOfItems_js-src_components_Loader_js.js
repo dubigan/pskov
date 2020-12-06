@@ -65,14 +65,22 @@ var ListOfItems = /*#__PURE__*/function (_Component) {
 
     return _possibleConstructorReturn(_this, (_temp = _this = _super.call.apply(_super, [this].concat(args)), _this.state = {
       loading: false,
+      messages: [],
       showDeleteDialog: false,
-      itemDelete: '',
+      itemDelete: "",
       items: [],
       sortedBy: {
-        name: '',
-        direction: 'asc'
+        name: "",
+        direction: "asc"
       }
-    }, _this.url = '', _this.upArrow = "\u2191", _this.downArrow = "\u2193", _this.getItems = function () {
+    }, _this.url = "", _this.upArrow = "\u2191", _this.downArrow = "\u2193", _this.nameOfItem = "", _this.getErrors = function (data) {
+      return Object.keys(data).map(function (key) {
+        return {
+          type: "error",
+          message: data[key]
+        };
+      });
+    }, _this.getItems = function () {
       _this.setState({
         loading: true
       }); //console.log('getItems props.owner', this.props.owner);
@@ -87,7 +95,10 @@ var ListOfItems = /*#__PURE__*/function (_Component) {
           items: res.data
         });
       }).catch(function (err) {
-        return console.log('getItems', err.response.data);
+        //console.log("getItems", err.response.data);
+        _this.setState({
+          messages: _this.getErrors(err.response.data)
+        });
       }).finally(function () {
         return _this.setState({
           loading: false
@@ -103,14 +114,14 @@ var ListOfItems = /*#__PURE__*/function (_Component) {
       if (_this.state.sortedBy.name !== sorted_name) {
         var sortedBy = {
           name: sorted_name,
-          direction: 'desc'
+          direction: "desc"
         }; //console.log('btnSortClick sortedBy', sortedBy);
 
         _this.setState({
           sortedBy: sortedBy
         });
       } else {
-        var direction = _this.state.sortedBy.direction === 'desc' ? 'asc' : 'desc'; //console.log('btnSortClick direction', direction);
+        var direction = _this.state.sortedBy.direction === "desc" ? "asc" : "desc"; //console.log('btnSortClick direction', direction);
 
         var _sortedBy = _objectSpread(_objectSpread({}, _this.state.sortedBy), {}, {
           direction: direction
@@ -131,25 +142,31 @@ var ListOfItems = /*#__PURE__*/function (_Component) {
       });
     }, _this.btnAddClick = function (e) {
       axios__WEBPACK_IMPORTED_MODULE_1___default().post(_this.url, {
-        btn_add: ''
+        btn_add: ""
       }).then(function (res) {
         if (res.data.redirect) {
-          window.location.href = res.data['redirect'];
+          window.location.href = res.data["redirect"];
         }
       }).catch(function (err) {
-        return console.log('btnAddClick', err.response.data);
+        //console.log("btnAddClick", err.response.data);
+        _this.setState({
+          messages: _this.getErrors(err.response.data)
+        });
       });
     }, _this.btnEditClick = function (e) {
       axios__WEBPACK_IMPORTED_MODULE_1___default().post(_this.url, {
-        btn_edit: '',
+        btn_edit: "",
         item_pk: e.target.value,
         url: window.location.pathname
       }).then(function (res) {
         if (res.data.redirect) {
-          window.location.href = res.data['redirect'];
+          window.location.href = res.data["redirect"];
         }
       }).catch(function (err) {
-        return console.log('btnEditClick', err.response.data);
+        //console.log("btnEditClick", err.response.data);
+        _this.setState({
+          messages: _this.getErrors(err.response.data)
+        });
       });
     }, _this.itemDelete = function (confirm) {
       _this.setState({
@@ -157,23 +174,29 @@ var ListOfItems = /*#__PURE__*/function (_Component) {
       }); //console.log('itemDelete', confirm);
 
 
-      if (confirm === 'true') {
+      if (confirm === "true") {
         _this.setState({
           loading: true
         });
 
         axios__WEBPACK_IMPORTED_MODULE_1___default().post(_this.url, {
           sorted_by: _this.state.sortedBy,
-          btn_del: '',
+          btn_del: "",
           item_pk: _this.state.itemDelete.id
         }).then(function (res) {
-          console.log('delBtnClick', res.data);
-
+          //console.log("delBtnClick", res.data);
           _this.setState({
-            items: res.data
+            items: res.data,
+            messages: {
+              type: "success",
+              message: "".concat(_this.nameOfItem, " \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0443\u0434\u0430\u043B\u0435\u043D")
+            }
           });
         }).catch(function (err) {
-          return console.log('delBtnClick', err.response.data);
+          //console.log("delBtnClick", err.response.data);
+          _this.setState({
+            messages: _this.getErrors(err.response.data)
+          });
         }).finally(function () {
           return _this.setState({
             loading: false
@@ -204,7 +227,7 @@ var ListOfItems = /*#__PURE__*/function (_Component) {
     key: "arrow",
     get: function get() {
       //console.log('arrow', this.state.sortedBy.direction);
-      return this.state.sortedBy.direction === 'asc' ? this.upArrow : this.downArrow;
+      return this.state.sortedBy.direction === "asc" ? this.upArrow : this.downArrow;
     }
   }]);
 
@@ -273,7 +296,6 @@ ___CSS_LOADER_EXPORT___.push([module.id, "/* body,\nhtml {\n    height: 100%;\n 
   \***********************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__, module.id */
-/*! CommonJS bailout: module.exports is used directly at 19:0-14 */
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 var api = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
