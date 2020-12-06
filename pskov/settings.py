@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'channels',
     'testforjob.apps.TestforjobConfig',
-    'frontend.apps.FrontendConfig',
+    #'frontend.apps.FrontendConfig',
 ]
 
 MIDDLEWARE = [
