@@ -10,9 +10,14 @@ https://docs.djangoproject.com/en/3.1/howto/deployment/asgi/
 import os
 from channels.routing import ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
+
+#settings = os.environ.get('DJANGO_SETTINGS_MODULE')
+#settings.configure()
+#print(settings)
+import django
+django.setup()
 import testforjob.routing
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pskov.settings')
 
 #application = get_asgi_application()
 application = ProtocolTypeRouter({
