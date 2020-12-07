@@ -10,7 +10,6 @@ import {
 } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { registerLocale } from "react-datepicker";
-//import 'react-day-picker/lib/style.css';
 import "react-datepicker/dist/react-datepicker.css";
 import ru from "date-fns/locale/ru";
 import Alerts from "./Alerts";
@@ -39,7 +38,6 @@ export default class CarDetail extends Component {
 
   digitsOnly = (e) => {
     let charCode = e.charCode;
-    //console.log(charCode);
     if (charCode < 48 || charCode > 57) {
       // digits only
       e.preventDefault();
@@ -53,28 +51,20 @@ export default class CarDetail extends Component {
   };
 
   changeCar = (e) => {
-    //console.log('changeCar', e);
-
     const car = {
       ...this.state.car,
       [e.target.name]: e.target.value,
     };
 
-    //console.log('changeCar', car);
-
     this.setState({ car });
   };
 
   changeDate = (date) => {
-    //console.log("changeDate date", date);
-    const dt = new Date(date).toLocaleDateString("ru");
-    //console.log("changeDate date", dt);
+    //const dt = new Date(date).toLocaleDateString("ru");
     const car = {
       ...this.state.car,
       production: new Date(date).toLocaleDateString("ru"),
     };
-    //console.log("changeDate car", car);
-
     this.setState({ car });
   };
 
@@ -82,7 +72,6 @@ export default class CarDetail extends Component {
     axios
       .post(this.url, { car: this.state.car })
       .then((res) => {
-        //console.log("saveCar", res.data);
         if (res.data.redirect) {
           window.location.href = res.data["redirect"];
         }
@@ -98,7 +87,6 @@ export default class CarDetail extends Component {
         });
       })
       .catch((err) => {
-        //console.log("geCarDetail saveCar", err.response.data);
         this.setState({
           messages: this.getErrors(err.response.data),
         });
@@ -109,12 +97,9 @@ export default class CarDetail extends Component {
     axios
       .post(this.url, {})
       .then((res) => {
-        //console.log("getCar", res.data);
-
         this.setState({ car: res.data });
       })
       .catch((err) => {
-        //console.log("getCarDetail getCar", err.response.data);
         this.setState({
           messages: this.getErrors(err.response.data),
         });

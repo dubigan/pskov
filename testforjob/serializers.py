@@ -5,7 +5,6 @@ from .models import *
 class CarSerializer(serializers.ModelSerializer):
   class Meta:
     model = Car
-    #fields = '__all__'
     exclude = ('owner',)
 
   def validate_owner(self, data):
@@ -29,7 +28,6 @@ class CarSerializer(serializers.ModelSerializer):
     try:
       dt = datetime.strptime(data, '%d.%m.%Y')
     except Exception as e: 
-      #print("validate_production", e)
       raise serializers.ValidationError("Неверный формат даты. Используйте формат dd.mm.yyyy")
     
     if dt > datetime.now():
@@ -53,7 +51,6 @@ class CarSerializer(serializers.ModelSerializer):
     return data
 
   def update(self, instance, data):
-    #print('CarSerialize update', data)
     if instance.owner != None:
       instance.manufacturer = data.get('manufacturer', instance.manufacturer)
       instance.model = data.get('model', instance.model)
@@ -75,7 +72,6 @@ class OwnerSerializer(serializers.ModelSerializer):
     fields = '__all__'
 
   def validate_cars(self, data): # OK 
-    #print('validate_cars')
     return data
 
   def validate_name(self, data):

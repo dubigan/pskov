@@ -5,19 +5,14 @@ from .serializers import *
 
 class UploadConsumer(WebsocketConsumer):
     def connect(self):
-      #print('UploadConsumer', 'connect')
       self.accept()
 
     def disconnect(self, close_code):
-      #print('UploadConsumer disconnect', close_code)
       pass
 
     def receive(self, text_data):
       try:
         text_data_json = json.loads(text_data)
-        #print('UploadConsumer', text_data_json)
-        #print('UploadConsumer clearDB', clearDB)     
-        #print('UploadConsumer content', content)
         self.send(text_data=json.dumps({
           'type': 'success',
           'message': 'Успешная загрузка файла'

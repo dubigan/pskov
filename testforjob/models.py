@@ -3,10 +3,6 @@ from django.db.models import * #Model, IntegerField, CharField, TextField, DateT
 
 # Create your models here.
 
-# class Manufacturer(Model):
-#   name = CharField(max_length=20)
-
-
 class Car(Model):
   model = CharField(max_length=50, default='', unique=False, blank=True, null=True)
   color = CharField(max_length=20, default='', unique=False, blank=True, null=True)

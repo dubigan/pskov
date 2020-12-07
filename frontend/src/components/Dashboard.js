@@ -23,7 +23,6 @@ export default class Dashboard extends Component {
 
   setWebsocketStatus = (status) => {
     const websocket = { ...this.state.websocket, status: status };
-    //console.log("setWebsocketStatus", websocket);
     this.setState({ websocket });
   };
 
@@ -68,9 +67,7 @@ export default class Dashboard extends Component {
       console.log("websocket error", e);
       this.setWebsocketStatus(`websocket error: ${e}`);
     };
-    //console.log('Dashboard componentDidMount', ws);
     const websocket = { ...this.state.websocket, ws: ws };
-    //console.log('set ws', websocket);
     this.setState({ websocket });
   };
 
@@ -79,7 +76,6 @@ export default class Dashboard extends Component {
   }
 
   selectFormat = (e) => {
-    //console.log('selectFormat', e.target.value);
     this.setState({ downloadFormat: e.target.value });
   };
 
@@ -89,7 +85,6 @@ export default class Dashboard extends Component {
 
     input.onchange = (e) => {
       const file = e.target.files[0];
-      //console.log('selectFileToUpload', file);
       this.setState({ uploadFile: file });
     };
 
@@ -103,7 +98,6 @@ export default class Dashboard extends Component {
     // here we tell the reader what to do when it's done reading...
     reader.onload = (readerEvent) => {
       const content = readerEvent.target.result; // this is the content!
-      //console.log(content);
       this.state.websocket.ws.send(
         JSON.stringify({ cleardb: this.state.clearDB, content: content })
       );
@@ -111,9 +105,7 @@ export default class Dashboard extends Component {
   };
 
   clearDB = () => {
-    const clearDB = !this.state.clearDB;
-    //console.log('clearDB', clearDB);
-    this.setState({ clearDB });
+    this.setState({ clearDB: !this.state.clearDB });
   };
 
   render() {
@@ -147,7 +139,6 @@ export default class Dashboard extends Component {
                 id="uploadFileName"
                 type="text"
                 value={this.state.uploadFile ? this.state.uploadFile.name : ""}
-                //onChange={this.change}
                 readOnly
               />
               <Button

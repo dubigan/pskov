@@ -11,23 +11,10 @@ export default class Alerts extends Component {
     let showAlert = false;
     const { messages } = this.props;
     const { messages: prevMessages } = prevProps;
-    // console.log("messages", messages);
-    // console.log("errors", errors);
-    // console.log("prevMessages", prevMessages);
-    // console.log("prevErrors", prevErrors);
 
     if (messages && messages.length > 0 && messages !== prevMessages) {
       showAlert = true;
     }
-    // console.log("Alerts componentDidUpdate showAlert", showAlert);
-    // console.log(
-    //   "Alerts componentDidUpdate prevSate.showAlert",
-    //   prevState.showAlert
-    // );
-    // console.log(
-    //   "Alerts componentDidUpdate this.state.showAlert",
-    //   this.state.showAlert
-    // );
     if (showAlert && !this.state.showAlert) {
       this.setState({
         showAlert,
@@ -51,7 +38,7 @@ export default class Alerts extends Component {
   };
 
   delay = (wait) =>
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       setTimeout(() => resolve(), wait);
     });
 
@@ -59,7 +46,7 @@ export default class Alerts extends Component {
     if (this.state.showAlert) {
       this.delay(
         this.props.timeout ? this.props.timeout : this.state.timeout
-      ).then((res) =>
+      ).then(() =>
         this.setState({
           showAlert: false,
         })

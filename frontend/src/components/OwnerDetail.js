@@ -53,17 +53,13 @@ export default class OwnerDetail extends Component {
     axios
       .post(this.url, {})
       .then((res) => {
-        //console.log('getOwner', res.data);
-
         const owner = {
           ...res.data,
           id: res.data["id"] ? res.data["id"] : -10,
         };
-        //console.log("getOwner", owner);
         this.setState({ owner: owner });
       })
       .catch((err) => {
-        //console.log("getOwnerDetail getOwner", err.response.data);
         this.setState({
           messages: this.getErrors(err.response.data),
         });
@@ -74,8 +70,6 @@ export default class OwnerDetail extends Component {
     axios
       .post(this.url, { owner: this.state.owner })
       .then((res) => {
-        //console.log('saveOwner', res.data);
-
         this.setState({
           owner: res.data,
           messages: [
@@ -84,7 +78,6 @@ export default class OwnerDetail extends Component {
         });
       })
       .catch((err) => {
-        //console.log("getOwnerDetail saveOwner", err.response.data);
         this.setState({
           messages: this.getErrors(err.response.data),
         });
@@ -112,7 +105,6 @@ export default class OwnerDetail extends Component {
           [e.target.name]: e.target.value,
         };
     }
-    //console.log('changeOwner', owner);
 
     this.setState({ owner });
   };
@@ -130,7 +122,6 @@ export default class OwnerDetail extends Component {
         }
       })
       .catch((err) => {
-        //console.log("btnAddClick", err.response.data);
         this.setState({
           messages: this.getErrors(err.response.data),
         });

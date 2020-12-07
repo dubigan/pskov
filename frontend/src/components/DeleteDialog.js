@@ -15,7 +15,6 @@ export default class DeleteDialog extends Component {
 
   getItemInfo = () => {
     if (this.props.params.itemDelete) {
-      //console.log(this.props.params.orderOut);
       return this.itemInfo(this.props.params.itemDelete);
     }
     return "";
@@ -35,12 +34,7 @@ export default class DeleteDialog extends Component {
           <Button variant="secondary" value={false} onClick={this.handleClose}>
             Отмена
           </Button>
-          <Button
-            variant="danger"
-            value={true}
-            onClick={this.handleClose}
-            // disabled={this.props.params.orderOut.id && "disable"}
-          >
+          <Button variant="danger" value={true} onClick={this.handleClose}>
             Удалить
           </Button>
         </Modal.Footer>
